@@ -1,0 +1,199 @@
+{include file="center/header" /}
+<style>
+
+</style>
+<div class="layui-main content_box">
+    <div class="box_left">
+        {include file="center/menu" /}
+    </div>
+    <div class="box_right">
+        <section>
+            <table class="layui-table" lay-data="{ url:'/member/my_order', page:{fixed:'right'}, id:'idTest',response:{statusCode: 1},limits:[10,20],limit:20,id: 'testReload'}" lay-filter="membetTable">
+                <thead>
+                <tr>
+                    <th lay-data="{field:'order_id', sort: true, align:'center'}">订单号</th>
+                    <th lay-data="{field:'order_price', align:'center',templet:'#order_price'}">订单金额</th>
+                    <th lay-data="{field:'lengthTime', align:'center',templet:'#lengthTime'}">购买时长(月)</th>
+                    <th lay-data="{field:'deliveryMethod', align:'center'}">配送方式</th>
+                    <th lay-data="{field:'shippingAddress', align:'center',templet:'#shippingAddress'}">配送地址</th>
+                    <th lay-data="{field:'order_addTime', align:'center',templet:'<div> {{ toDateString(d.order_addTime) }} </div>'}">添加时间</th>
+                    <th lay-data="{field:'order_status', align:'center', templet:'#status'}">支付状态</th>
+                    <th lay-data="{align:'center',templet:'#detailInfo'}">详细信息</th>
+                    <th lay-data="{fixed: 'right', align:'center',width:90, toolbar: '#barDemo'}"></th>
+                </tr>
+                </thead>
+            </table>
+        </section>
+
+    </div>
+
+</div>
+<script type="text/html" id="barDemo">
+    {{# if(d.order_status == 0){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="pay_order"><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>立即支付</a>
+    {{# }else{ }}
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del_order">删除订单</a>
+    {{# } }}
+
+</script>
+<script type="text/html" id="order_price">
+    ￥{{ d.order_price }} CNY
+</script>
+<script type="text/html" id="lengthTime">
+    {{d.lengthTime}}个月
+</script>
+<script type="text/html" id="status">
+    {{#  if(d.order_status == 0){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" >未支付</a>
+    {{#  } else { }}
+    <a class="layui-btn layui-btn-xs">已支付</a>
+    {{#  } }}
+</script>
+<script type="text/html" id="shippingAddress">
+    {{ JSON.parse(d.shippingAddress) }}
+</script>
+<script type="text/html" id="detailInfo">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" data-info='{{ d.order_detailInfo }}' data-desc='{{ d.order_describe }}' onclick='detailInfo(this)'>订单详情</a>
+</script>
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        var $ = layui.jquery;
+
+        //监听工具条
+        table.on('tool(membetTable)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del_order'){
+                layer.confirm('确定删除吗？', function(index){
+                    $.ajax({
+                        type:"GET",
+                        url:"/member/del_order/"+data.order_id,
+                        success:function(msg){
+                            layer.close(index);
+                            if(msg.code == 0){
+                                layer.msg(msg.msg,{time:1200});
+                                return false;
+                            }else if(msg.code == 1){
+                                obj.del();
+                                layer.msg(msg.msg,{time:1000});
+                                return false;
+                            }
+                        },error:function(){
+                            layer.msg('网络错误，请重试...',{time:1200});
+                            return false;
+                        }
+                    })
+
+                });
+            } else if(obj.event === 'pay_order'){
+                $.ajax({
+                    type:'get',
+                    url:'/member/pay_order/'+data.order_id,
+                    data:"",
+                    success:function(msg){
+                        if(msg.code == 0){
+                            layer.msg(msg.msg);
+                            return false;
+                        }else if(msg.code == 1){
+                            location.href=msg.url;
+                            return false;
+                        }
+                    },
+                    error:function(){
+                        layer.msg('网络错误，请重试...');
+                        return false;
+                    }
+                })
+            }
+        });
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                        ,data = checkStatus.data;
+                if(data.length <= 0){
+                    layer.msg('请选择要删除的数据！');
+
+                    return false;
+                }
+                var uids = new Array;
+                $.each(data,function(i,v){
+                    uids.push(v.uid);
+                });
+                layer.confirm('确定删除选中的数据？',function(index){
+                    $.ajax({
+                        type:"POST",
+                        url:'/admin/member/member_dels',
+                        data:{'uids':JSON.stringify(uids)},
+                        success:function(data){
+                            layer.close(index);
+                            if(data.code == 0){
+                                layer.msg(data.msg,{time:1200});
+                                return false;
+                            }else if(data.code == 1){
+                                layer.msg(data.msg,{time:1200},function(){
+                                    location.reload();
+                                });
+
+                                return false;
+                            }
+                        },error:function(){
+                            layer.msg('网络错误，请重试...',{time:1200});
+                            return false;
+                        }
+                    })
+                })
+            },member_add:function(){
+                layer.open({
+                    title:'添加用户',
+                    type: 2,
+                    area: ['700px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/admin/member/member_add'
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+    function detailInfo(obj){
+        var info = $(obj).data('info');
+        var desc = $(obj).data('desc');
+        var html = '<div>';
+        $.each(info,function(i,v){
+            html += '<div style="border-bottom:1px solid #ccc;">商品名称：'+v.mill_name+'<br/>';
+            html += '商品数量：'+v.order_num+'件 '+'<br/>';
+            html += '商品单价：￥'+v.mill_price+' CNY'+'<br/>';
+            html += '购买时长：'+v.lengthTime+'个月</div>';
+
+        })
+        html += '订单备注：'+desc;
+        html += '</div>';
+        var i = 0;
+        var index = '';
+
+       var index = layer.tips(html, obj, {
+            tips: [1, '#0FA6D8'],
+            area:['200px'],
+            time:3000,
+        });
+    }
+</script>
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+<div style="clear:both;"></div>
+{include file="common/footer" /}
+
+

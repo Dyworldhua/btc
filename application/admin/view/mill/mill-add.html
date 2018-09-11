@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>
+    添加矿机
+</title>
+{include file="common/header" /}
+<style>
+.layui-form-onswitch:before{
+    content:'';
+}
+.upload_img{
+    position: relative;
+    margin: 20px 0 0 108px;
+    width: 115px;
+    height: 115px;
+
+}
+.upload_img img{
+    width:100%;
+    height:100%;
+}
+#erroinfo{
+    position: absolute;
+    bottom: 4px;
+    width: 100%;
+    background: white;
+}
+.again_upload{
+    float:right;
+}
+.sub_btns{
+    position:fixed;
+    bottom:0;
+    left:20%;
+}
+</style>
+</head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+
+                <label class="layui-form-label">*矿机名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mill_name" value="" lay-verify="required" autocomplete="off" placeholder="矿机名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">*算力</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mill_force" lay-verify="required|number" autocomplete="off" placeholder="矿机算力" class="layui-input" value="">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">*价格</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mill_price" value="" lay-verify="required|number" placeholder="价格" autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">*库存</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mill_number" lay-verify="required|number" autocomplete="off" class="layui-input" placeholder="库存" value="">
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">*功耗</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mill_power" value="" lay-verify="required|number" placeholder="功耗(kw/h)" autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">*重量</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mill_weight" placeholder="重量(kg)" lay-verify="required|number" autocomplete="off" class="layui-input" value="">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">*最大购买数量</label>
+                <div class="layui-input-block">
+                    <input type="text" name="mill_buyVal" placeholder="最大购买数量" lay-verify="required|number" autocomplete="off" class="layui-input" value="">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">*简介</label>
+            <div class="layui-input-block">
+                <textarea placeholder="简介" name="mill_intro" lay-verify="required" style="width:90%;" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">*矿机图片</label>
+
+                    <button type="button" class="layui-btn" id="uploadimg">上传图片</button>
+                <button type="button" class="layui-btn"  id="uploadbtn">开始上传</button>
+
+                    <div class="upload_img">
+                        <img id="previewimg">
+                        <p id="erroinfo"></p>
+                    </div>
+
+            </div>
+            <input type="hidden" name="mill_img" value="" id="mill_img">
+        </div>
+        <div class="layui-form-item layui-form-text">
+               <label class="layui-form-label">*矿机描述</label>
+               <div class="layui-input-block">
+                 <textarea class="layui-textarea layui-hide" id="LAY_demo_editor"></textarea>
+               </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">*矿机参数描述</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" id="LAY_demo_editor1"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">*售后服务</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" id="LAY_demo_editor2"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item sub_btns">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="formsub">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+{include file="common/footer"/}
+<script>
+    layui.use(['form', 'layedit', 'laydate','upload'], function(){
+        var form = layui.form
+                ,layer = layui.layer
+                ,layedit = layui.layedit
+                ,$ = layui.jquery
+                ,upload = layui.upload;
+        layedit.set({
+            uploadImage: {
+                url: '/uploadFile' //接口url
+                ,type: 'post' //默认post
+            }
+        });
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+        var editIndex1 = layedit.build('LAY_demo_editor1');
+        var editIndex2 = layedit.build('LAY_demo_editor2');
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#uploadimg'
+            ,url: '/uploadMillImg'
+            ,auto: false
+            ,field:'mill_img'
+            ,bindAction:'#uploadbtn',
+            time:3000
+            ,choose: function(obj){
+                $('#mill_img').val('');
+                $('#erroinfo').html('');
+                $('#uploadbtn').show();
+                obj.preview(function(index, img, result){
+                    $('#previewimg').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,before: function(obj){
+                layer.load(1, {
+                    shade: [0.5,'#000'] //0.1透明度的白色背景
+                });
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#previewimg').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                layer.closeAll('loading');
+                if(res.code == -1){
+                    return layer.msg(res.msg);
+                }else if(res.code == 0){
+                    $('#uploadbtn').hide();
+                    $('#erroinfo').hide();
+                    $('#erroinfo').html('<span style="display:block; color: green; text-align:center">上传成功！</span>');
+                    $('#erroinfo').show();
+                    $('#mill_img').val(res.data.src);
+                    return layer.msg(res.msg);
+                }
+            }
+            ,error: function(){
+                layer.closeAll('loading');
+                $('#uploadbtn').hide();
+                //演示失败状态，并实现重传
+                var erroinfo = $('#erroinfo');
+                erroinfo.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs layui-btn-danger again_upload">重试</a>');
+                erroinfo.find('.again_upload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+
+        //监听提交
+        form.on('submit(formsub)', function(data){
+            var img = $('#mill_img').val();
+            var mill_describe = layedit.getContent(editIndex);
+            var mill_arguments = layedit.getContent(editIndex1);
+            var mill_saleAfter = layedit.getContent(editIndex2);
+//            if(img == ''){
+//                layer.msg('请上传矿机图片！');
+//                return false;
+//            }
+//            if(mill_describe == ''){
+//                layer.msg('矿机描述必须！');
+//                return false;
+//            }
+//            if(mill_arguments == ''){
+//                layer.msg('矿机参数描述必须！');
+//                return false;
+//            }
+//            if(mill_saleAfter == ''){
+//                layer.msg('售后服务必须！');
+//                return false;
+//            }
+            $.ajax({
+                url:"/admin/mill/mill_add",
+                type:"POST",
+                data:{
+                    'data':data.field,
+                    'mill_describe':mill_describe,
+                    'mill_arguments':layedit.getContent(editIndex1),
+                    'mill_saleAfter':layedit.getContent(editIndex2)
+                },
+                success:function(msg){
+                    if(msg.code == 0){
+                        layer.msg(msg.msg);
+                        return false;
+                    }else if(msg.code == 1){
+                        layer.msg(msg.msg);
+                        return false;
+                    }
+                },
+                error:function(){
+                    layer.msg('网络错误，请重试...',{time:1200});
+                    return false;
+                }
+            })
+            return false;
+        });
+
+
+    });
+</script>
+
+</body>
+
+</html>

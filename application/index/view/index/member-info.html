@@ -1,0 +1,297 @@
+{include file="center/header" /}
+<style>
+    .info{
+        display:inline-block;
+        width:40%;
+        height:300px;
+        margin: 0 50px 0 0;
+        overflow:hidden;
+    }
+    .info_box{
+        height:100%;
+    }
+    .info_box table{
+        margin:10px 0 0 0;
+    }
+    .info_box table tr td:nth-child(1){
+        text-align:right;
+        font-weight:bold;
+        width:160px;
+    }
+    .info_box table tr td:nth-child(2){
+        padding-left:0;
+    }
+    .info_box table td{
+        border:0;
+    }
+    .user_info{
+        text-align:center;
+    }
+    .input-width{
+        width:30%;
+    }
+    .input-label{
+        width:100px;
+        text-align:right;
+    }
+    .tab_title_bot{
+        margin-bottom:20px;
+    }
+</style>
+<div class="layui-main content_box">
+    <div class="box_left">
+        {include file="center/menu" /}
+    </div>
+    <div class="box_right">
+        <section>
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title tab_title_bot">
+                    <li class="layui-this">账户信息</li>
+                    <li>修改密码</li>
+                    <li>更换手机号</li>
+
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <div class="info">
+                            <fieldset class="layui-elem-field info_box">
+                                <legend>基本信息</legend>
+                                <div class="layui-field-box">
+                                    <table class="layui-table">
+                                        <tr>
+                                            <td>用户名：</td>
+                                            <td><?=session('indexUser')?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>手机号：</td>
+                                            <td><?=$userInfo['phone']?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>注册时间：</td>
+                                            <td><?=date('Y-m-d H:i:s',$userInfo['addTime'])?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>上一次登录IP：</td>
+                                            <td><?=session('lastLoginIp')?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>上一次登录时间：</td>
+                                            <td><?=date('Y-m-d H:i:s',session('lastLoginTime'))?></td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="info">
+                            <fieldset class="layui-elem-field info_box">
+                                <legend>其他信息</legend>
+                                <div class="layui-field-box">
+                                    ...
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <form class="layui-form changePwdFrom" action="" method="post">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label input-label">新密码</label>
+                                <div class="layui-inline input-width">
+                                    <input type="password" name="password" lay-verify="required|password" autocomplete="off" placeholder="请输入新密码" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label input-label">确认密码</label>
+                                <div class="layui-inline input-width">
+                                    <input type="password" name="pwd" lay-verify="required|pwd|identical" placeholder="请输入确认密码" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn changePwdBtn" lay-submit="" lay-filter="changePwdBtn"><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="layui-tab-item">
+                        <form class="layui-form changePhoneFrom" action="" method="post">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label input-label">新手机号</label>
+                                <div class="layui-inline input-width">
+                                    <input type="text" name="phone" id="phone" lay-verify="required|phone" autocomplete="off" placeholder="请输入新手机号" class="layui-input">
+                                </div><a class="btn btn-warning" onclick="getNoteCode(this)">获取短信验证码</a>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label input-label">短信验证码</label>
+                                <div class="layui-inline input-width">
+                                    <input type="text" name="notecaptcha" lay-verify="required" placeholder="请输入短信验证码" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn changePhoneBtn" lay-submit="" lay-filter="changePhoneBtn"><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <span></span>
+        </section>
+
+    </div>
+
+</div>
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+                ,layer = layui.layer
+                ,$ = layui.jquery;
+
+        //自定义验证规则
+        form.verify({
+            password: [/(.+){8}$/, '密码至少8位']
+            ,pwd: [/(.+){8}$/, '确认密码至少8位']
+            ,identical:function(){
+                var password = $('input[name="password"]').val();
+                var pwd = $('input[name="pwd"]').val();
+                if(password != pwd){
+                    return '密码不一致！';
+                }
+            }
+
+        });
+
+        //监听提交
+        form.on('submit(changePwdBtn)', function(data){
+            $.ajax({
+                url:'/member/changePwd',
+                type:'POST',
+                data:data.field,
+                beforeSend:function(){
+                    $('.changePwdBtn i').html('&#xe63d;')
+                },
+                success:function(data){
+                    $('.changePwdBtn i').html('');
+                    if(data.code == 0){
+                        layer.msg(data.msg);
+                        return false;
+                    }else if(data.code == 1){
+                        $('.changePwdFrom')[0].reset();
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                },
+                error:function(){
+                    $('.changePwdBtn i').html('');
+                    layer.msg('网络错误，请稍后重试...',{time:1200});
+                    return false;
+                }
+            });
+            return false;
+        });
+
+        //监听提交
+        form.on('submit(changePhoneBtn)', function(data){
+            $.ajax({
+                url:'/member/changePhone',
+                type:'POST',
+                data:data.field,
+                beforeSend:function(){
+                    $('.changePhoneBtn i').html('&#xe63d;')
+                },
+                success:function(data){
+                    $('.changePhoneBtn i').html('');
+                    if(data.code == 0){
+                        layer.msg(data.msg);
+                        return false;
+                    }else if(data.code == 1){
+                        $('.changePhoneFrom')[0].reset();
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                },
+                error:function(){
+                    $('.changePhoneBtn i').html('');
+                    layer.msg('网络错误，请稍后重试...',{time:1200});
+                    return false;
+                }
+            });
+            return false;
+        });
+
+
+    });
+    function getNoteCode(obj) {
+        var phone = $('#phone').val();
+        var reg = /^1[3|5|6|7|8]\d{9}$/;
+        if (phone == '') {
+            layer.msg('请填写手机号！');
+            return false;
+        } else if (!reg.test(phone)) {
+            return false;
+        } else {
+            $.ajax({
+                url: "/getNoteCode",
+                type: 'POST',
+                data: {"phone": phone},
+                success: function (data) {
+                    if (data.code == 1) {
+                        layer.msg(data.msg);
+                        sec_time(obj,120);
+                        return false;
+                    } else if (data.code == 0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }else{
+                        layer.msg(data.msg,{time:1000});
+                        return false;
+                    }
+
+                },
+                error:function(){
+                    layer.msg('网络错误，请稍后重试',{time:3000});
+                    return false;
+                }
+            })
+        }
+    }
+    function sec_time(obj,sec){
+        $(obj).removeAttr('onclick');
+        $(obj).removeClass('btn-warning');
+        $(obj).addClass('btn-default');
+
+        $(obj).html('<span class="sec">'+sec+'</span>s后获取验证码');
+        var stop = setInterval(function(){
+            sec --;
+            $('.sec').text(sec);
+            if(sec <= 0){
+                $(obj).attr('onclick','getNoteCode(this)');
+                $(obj).addClass('btn-warning');
+                $(obj).removeClass('btn-default');
+                $(obj).text('获取短信验证码');
+                clearTimeout(stop);
+            }
+        },1000);
+    }
+</script>
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+<div style="clear:both;"></div>
+{include file="common/footer" /}
+
+

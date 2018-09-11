@@ -1,0 +1,169 @@
+{include file="common/header" /}
+<title><?=$title;?></title>
+<style>
+    .pro_list{
+        margin: 200px auto;
+        margin-bottom: 20px;
+        width:1300px;
+    }
+    .mill{
+        position: relative;
+        display: inline-block;
+        float: left;
+        width:21%;
+        height:350px;
+        margin: 10px 20px 10px 20px;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-align: center;
+        box-shadow: 0 0 5px #ccc;
+        cursor: pointer;
+    }
+    .mill_list{
+        text-align: center;
+    }
+    .mill:hover{
+        box-shadow: 0 0 5px #585757;
+    }
+    .mill_img{
+        width: 215px;
+        height: 165px;
+        margin:0 auto;
+    }
+   .mill_depri{
+       margin:30px auto;
+   }
+    .mill_price{
+        margin:30px 0 0 0;
+        font-size: 20px;
+        font-weight: bold;
+        color: #888;
+    }
+    .mill_btn{
+        position: absolute;
+        width:100%;
+        bottom:15px;
+        height:30px;
+
+    }
+    .mor_btn{
+        margin: 25px auto;
+        text-align: center;
+        width: 97%;
+    }
+</style>
+
+<div class="layui-main pro_list">
+    <section class="mill_list">
+    </section>
+    <div class="mor_btn">
+        <a class="layui-btn layui-btn-primary layui-btn-fluid" id="mor_btn" data-type="mor_btn">
+            <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop" id="loading_btn" style="font-size:18px;"></i>
+            加载更多
+        </a>
+    </div>
+    <input type="hidden" id="page" value="">
+</div>
+
+{include file="common/footer" /}
+
+</div>
+<script>
+    layui.use('layer',function(){
+        var $ = layui.jquery,
+                layer = layui.layer;
+        var index = '';
+        function mill_init(p){
+            console.log(p);
+            $.ajax({
+                url:'/mill_list?page='+p,
+                type:'GET',
+                data:"",
+                timeout:3000,
+                beforeSend:function(){
+                    index = layer.load(1, {
+                        shade: [0.2,'#000']
+                    });
+                },
+                success:function(data){
+                    layer.close(index);
+                    if(data.data.length <=0 ){
+                       // alert('没有数据了');
+                        $('#mor_btn').data('type','');
+                        $('#mor_btn').text('没有数据了');
+                        return false;
+
+                    }
+                    // <div>
+                    //     <a href="###">
+                    //         <div>
+                    //         </div>
+                    //         <div>
+                    //             <span>
+                    //                 <strong></strong><br/>
+                    //             </span>
+                    //             <h4></h4>
+                    //         </div>
+                    //     </a>
+                    //     <div>
+                    //         <a href="###"></a>
+                    //     </div>
+                    // </div>
+                    var html = '';
+                    $.each(data.data,function(i,v){
+                        html += ' <div class="mill"><a href="/mill_detail/'+ v.mid+'">';
+                        html += '<div class="mill_img" style="background: url(\''+v.mill_img+'\') center no-repeat ;background-size: 100%; "></div>';
+                        html += '<div class="mill_depri"><span class="mill_detail"><strong>'+v.mill_name+'</strong>' ;
+                        html += '<br/>'+ v.mill_intro+'</span><h4 class="mill_price">￥'+ v.mill_price+' CNY</h4></div>';
+                        html += '</a> <div class="mill_btn"><a href="/mill_detail/'+ v.mid+'" class="layui-btn layui-btn-fluid">立即购买</a></div></div>';
+                    });
+                    $('#page').val(data.current_page);
+                    $('.mill_list').append(html);
+                    console.log(data);
+                },error:function(){
+                    layer.close(index);
+                    layer.msg('加载数据失败，请刷新重试...',{time:1500,icon:2});
+                    return false;
+                }
+            })
+        }
+        mill_init(1);
+        //加载下一页
+        var $ = layui.$, active = {
+           mor_btn:function(){
+                var page = $('#page').val();
+               mill_init(parseInt(page)+1);
+           }
+
+        };
+        $('#mor_btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+</script>
+<script>
+    function resizeWindow(){
+    var window_height = $(window).height();
+    var top = $("header").height();
+    var bottom = $("footer").height();
+
+    var temp = window_height - top - bottom;
+    $(".main-container").css("height",temp);
+
+    var main_window_height = $(".main-container").height();
+
+    if(main_window_height){
+        $('.auto-height-right').css("min-height", main_window_height - 130);
+    }else{
+        $('.auto-height-right').css("min-height", temp);
+    }
+}
+
+$(window).on("resize",function(){
+    resizeWindow();
+});</script>
+<script>var resizefunc = [];</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>比特大陆(BITMAIN)</title>
+    <link rel="stylesheet" href="__INDEX__/css/style.css" />
+    <link rel="stylesheet" href="__INDEX__/css/bt-layout.css?t=1510044498"/>
+    <link href="__INDEX__/img/favicon.ico" mce_href="__INDEX__/img/favicon.ico" rel="bookmark" type="image/x-icon" />
+    <link href="__INDEX__/img/favicon.ico" mce_href="__INDEX__/img/favicon.ico" rel="icon" type="image/x-icon" />
+    <link href="__INDEX__/img/favicon.ico" mce_href="__INDEX__/img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <script type="text/javascript">
+        window.I18n = "zh-CN";
+        window.locale = 'zh-CN';
+        window.defaultUserItem = [
+            {
+                name: '登录',
+                href: '/login',
+                method: 'get',
+                target: '_self'
+            },
+            {
+                name: '注册',
+                href: '/register',
+                method: 'get',
+                target: '_self'
+            }
+        ]
+    </script>
+    <style>
+        .home_header_nav.scrolled{
+            background:white !important;
+        }
+        #wrapper{
+            overflow: hidden;
+        }
+        #main-center{
+            margin-top:150px;
+        }
+        #wrapper .navbar{
+            border-top-color:transparent;
+            border-left-color:transparent;
+            border-right-color:transparent;
+        }
+        .navbar-nav > li > .dropdown-menu {
+            left: 0;
+            padding: 0px;
+            padding-bottom: 10px;
+            border-radius: 0px 0px 4px 4px;
+            background: rgba(122,134,143,0.7);
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+        }
+    </style>
+    <link rel="stylesheet" href="__INDEX__/css/bootstrap.min.css" />
+    <link rel="stylesheet" media="all" href="__INDEX__/css/view3-ed861d367d138ecb72b5c6a7c67ced5d0d3880e51f50950cdffc700705362110.css" />
+
+
+    <link rel="stylesheet" href="__INDEX__/layui2.2.5/css/layui.css">
+
+</head>
+
+<body class="zh-CN">
+<div id="wrapper">
+    <nav class="navbar navbar-default home_header no-radius header_nav" style="background: black;">
+        <div class="wild">
+            <div class="navbar-header">
+                <a href="/"><img src="__INDEX__/img/hashnestlogo-white-d1fbef06840e9e9f457a32563d81a3d5721a1eb88742ff4b93fc36619f0fe24a.svg" style="width:200px;margin-top: 6px;" /></a>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar">
+                <ul class="nav navbar-nav navbar-right">
+
+
+
+                    <?php if(session('?indexUser')){ ?>
+                        <li style="line-height: 2.8em;">
+                            <a href="/myCarts"><i class="layui-icon" style="color:#fff;font-size:20px;">&#xe657;</i></a>
+                        </li>
+                        <li class="main" style="height:40px;">
+                            <a aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+
+                                <label class="pull-left"><?=session('indexUser');?></label>
+                                <div class="user-avatar-layout pull-left" style="margin-left:10px;margin-right:5px;">
+                                    <img src="__INDEX__/img/avatar.png" />
+                                </div><span class="caret" style="margin-right:5px;"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/member/member_info"><i class="layui-icon" style="color:#fff;">&#xe612;</i> 用户中心</a></li>
+                                <li><a data-method="delete" href="/logout"><i class="layui-icon" style="color:#fff;">&#xe60b;</i> 退出登录</a></li>
+                            </ul>
+                    <?php }else {?>
+                        <li class="main" style="height:40px;">
+                            <a aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+                                <div class="user-avatar-layout pull-left" style="margin-left:10px;margin-right:5px;">
+                                    <img src="__INDEX__/img/avatar.png" />
+                                </div><span class="caret" style="margin-right:5px;"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/login">登录</a></li>
+                                <li><a href="/register">注册</a></li>
+
+                            </ul>
+
+                    <?php } ?>
+                    </li>
+                    <li>
+                        <a class="dropdown-toggle pull-right" data-toggle="dropdown" href="javascript:;">
+                            <div class="language">
+                                CN
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu pull-right dropdown-menu-header">
+                            <li><a href="">中文</a></li>
+                            <li><a href="">English</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="home_header_nav" id="home_header_nav" style="background: black;">
+        <div class="wild">
+            <div class="navbar-header hide" data-status="hide" id="home-header-logo">
+                <a href="/"><img src="__INDEX__/img/hashnestlogo-black-e2df6f40dcaa9906ccaa64863515bd0ddf2482df19b9667aea2462b3ee6e5264.svg" style="width:200px;margin-top: 5px;" /></a>
+            </div>
+            <ul class="nav navbar-right">
+                <li class="pull-left"><a href="/mill_list">矿机</a></li>
+                <li class="pull-left"><a href="">算力</a></li>
+                <li class="pull-left"><a href="">合约</a></li>
+                <li class="pull-left"><a href="">钱包</a></li>
+                <li class="pull-left"><a href="">设置</a></li>
+                <li class="pull-left"><a href="">流水</a></li>
+                <li class="pull-left"><a href="">矿池</a></li>
+                <li class="pull-left"><a href="">论坛</a></li>
+                <li class="pull-left"><a href="">App</a></li>
+            </ul>
+        </div>
+    </div>

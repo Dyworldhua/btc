@@ -1,0 +1,400 @@
+
+{include file="common/header" /}
+<title>Hashnest 算力巢</title>
+   <section class="main-slider fullsize" data-stellar-background-ratio="0.5" style="overflow: hidden;background: #000;">
+    <video autoplay="autoplay" class="home_video" id="home-bg-video" loop="loop" muted="muted">
+     <source src="https://dn-bitmain.qbox.me/pool.mp4" type="video/mp4"></source>
+     <source src="https://dn-bitmain.qbox.me/pool.ogg" type="video/ogg"></source>
+     <source src="https://dn-bitmain.qbox.me/pool.webm" type="video/webm"></source>
+    </video>
+    <div class="video-lemo-bar"></div>
+    <div class="home-center-table">
+     <div class="tr">
+      <div class="td">
+       <div class="center">
+        <img class="watermark" src="__INDEX__/img/fromsandtobitcoin-dcfa9a268f05a62084d978be4e20139fd7130ad2730eb76dc166a5bbede3281c.svg" />
+        <br />
+        <br />
+        <a class="home_video_play_btn" id="home_video_play_btn"><img src="__INDEX__/img/play_icon-58fd89f6840ed6906fd1b2d6a8f5b5e2ed49fba4e430527fe8a2f0058154a52c.svg" /></a>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="light-video-box hide" id="light-video-box-home">
+     <div class="video-box">
+      <div class="video-left">
+       <video class="video-js" controls="controls" height="450" id="fromsandtobitcoin-video" poster="https://dn-bitmain.qbox.me/fromsandtobitcoinV1.jpg" preload="auto" width="800">
+        <source src="https://dn-bitmain.qbox.me/fromsandtobitcoin.mp4" type="video/mp4"></source>
+       </video>
+      </div>
+      <div class="video-right">
+       <a class="close-button" href="javascript:;" id="lvb-close-btn" style="margin-bottom: 150px;"><img src="__INDEX__/img/close-0211582933ec446ddc1c6b6461aecb5cae8a492f6f9c3cdff5ad5c7feeacffef.svg" width="40" /></a>
+       <a class="close-button" href="javascript: share2FaceBook();"><img src="__INDEX__/img/facebook-b2192eb4f2682d34008563805bea87d341c3ebd52abe48fddb98004d99e6c24d.svg" width="40" /></a>
+       <a class="close-button" href="javascript: share2Twitter();"><img src="__INDEX__/img/twitter-235cb858561123a43b1b779d11aa3bf991d678e3923343f6699e789182ae5d27.svg" width="40" /></a>
+       <a class="close-button" href="http://v.youku.com/v_wechatShare/?url=http%3A%2F%2Fv.youku.com%2Fv_show%2Fid_XMTQ5OTk3NTIwOA%3D%3D.html%3Frefer%3Dpc-sns-1&amp;content=%E3%80%90%E8%A7%86%E9%A2%91%EF%BC%9A%E6%AF%94%E7%89%B9%E5%A4%A7%E9%99%86%E4%BA%91%E7%AE%97%E5%8A%9B+From+Sand+to+Bitcoin%E3%80%91" target="_blank"><img src="__INDEX__/img/moment-a4abd4f21e14c69ec31f9b542770feb964dc948488305cae410373f395ad272e.svg" width="40" /></a>
+       <a class="close-button" href="javascript: share2WeiBo();"><img src="__INDEX__/img/weibo-ebd74931a9d4ab2c1139d5181b8198c65e8b02bea0757ef1bb36c7418042a40c.svg" width="40" /></a>
+      </div>
+     </div>
+    </div>
+   </section>
+   <script>
+       var myVideo = document.getElementById("home-bg-video");
+
+var player = videojs('fromsandtobitcoin-video');
+
+$("#home_video_play_btn").on("click", function(){
+  $("#light-video-box-home").fadeIn();
+  myVideo.pause();
+  player.play();
+});
+
+$("#lvb-close-btn").on("click", function(){
+  myVideo.play();
+  player.pause();
+  $("#light-video-box-home").fadeOut();
+});
+</script>
+   <section class="hero-banner">
+    <div class="container text-center">
+     <div class="row">
+      <div class="col-sm-10 col-sm-offset-1">
+       <h3>什么是算力巢?</h3>
+       <br />
+       <p>算力巢是一家云挖矿平台 在这里 您不需要购买 维护矿机 就可以开始挖掘比特币</p>
+       <br />
+       <div data-animate="fadeInUp" data-delay="0">
+        <a class="btn btn-success" href="/more/5">开始挖矿</a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="features-block" style="background:#EEF1F9;">
+    <div class="container text-center">
+     <div class="row">
+      <div class="col-sm-4">
+       <h3>云端挖矿</h3>
+       <p>算力即买即挖 无需等待<br />从此摆脱噪音 电量 维护的烦恼</p>
+      </div>
+      <div class="col-sm-4">
+       <h3>稳定可靠</h3>
+       <p>全球节点 专业化部署 99.9%无故障保证<br />提供详尽的财务报表 收益支出 一目了然</p>
+      </div>
+      <div class="col-sm-4">
+       <h3>灵活投资</h3>
+       <p>最低1G算力就可以体验挖矿<br />创新的交易方式，算力可自由转让</p>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="features-block" data-stellar-background-ratio="0.5" style="background: #888fa5;min-height: 580px;">
+    <div class="container">
+     <div class="row">
+      <div class="col-sm-6" data-animate="fadeInLeft" data-delay="0">
+       <br />
+       <br />
+       <div class="app-title">
+        指点之间 即刻挖矿
+       </div>
+       <br />
+       <div class="app-download">
+        <a href="javascript:;"><img class="app-dlown-button" data-hover="__INDEX__/img/App_Store_Buttons_app-store-white-992e328d884c9db9ca0f122276f16a652a29b15d02124a984ebaf6118b70337d.svg" data-origin="__INDEX__/img/App_Store_Buttons_app-store-outline-da9cf0de289a61e23f31fd63d393bc353d5d9cd9157de72f2a3dd9f955561ad1.svg" data-platform="ios" src="__INDEX__/img/App_Store_Buttons_app-store-outline-da9cf0de289a61e23f31fd63d393bc353d5d9cd9157de72f2a3dd9f955561ad1.svg" /></a>
+       </div>
+       <div class="app-download">
+        <a href="javascript:;"><img class="app-dlown-button" data-hover="__INDEX__/img/App_Store_Buttons_google-play-white-c92d04149bd30f8bd19f878da8742251247a52e161a1d8015d8a8ba264dfe7d6.svg" data-origin="__INDEX__/img/App_Store_Buttons_google-play-outline-c31fb55a28eed909b420c38a4e6304db3c14cc1c34def1175401447db0a47306.svg" data-platform="android" src="__INDEX__/img/App_Store_Buttons_google-play-outline-c31fb55a28eed909b420c38a4e6304db3c14cc1c34def1175401447db0a47306.svg" /></a>
+       </div>
+       <br />
+      </div>
+      <div class="col-sm-6 text-center" data-animate="fadeInRight" data-delay="0" style="height: 480px;">
+       <img class="appreview_img" id="appreview" src="__INDEX__/img/appreview-87b07e759538241bf2c77972511652b8816f03c14bbc012a6b304e4fd21b6e33.png" style="height: 600px;" />
+       <div class="phone" id="ios" style="background:url(__INDEX__/img/iphone2-067005d1fe357497c86872b1fd365f42dde7fee251f4efaea5a941dbe6bf51d2.svg) no-repeat;background-size: 100% 100%;">
+        <h3>iOS版</h3>
+        <br />
+        <div class="qrcode-container img-thumbnail" data-height="100" data-text="http://fir.im/hashnest" data-width="100" id="output"></div>
+        
+       </div>
+       <div class="phone" id="android" style="background:url(__INDEX__/img/nexus5-6a21c3664a5e3425b34e48efadc7e5655c0f5dfcf8b5879ca576eb9467cf0afb.svg) no-repeat;background-size: 100% 100%;">
+        <h3>安卓版</h3>
+        <br />
+        <div class="qrcode-container img-thumbnail" data-height="100" data-text="https://www.hashnest.com/app" data-width="100" id="output"></div>
+        
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <script>$(".app-dlown-button").on("click",function(){
+  $("#appreview").fadeOut(500);
+
+  $(".app-dlown-button").each(function(){
+    $(this).attr("src",$(this).data("origin"))
+  });
+
+  $(this).attr("src",$(this).data("hover"));
+  $(".phone").slideRightHide(500);
+  $("#" + $(this).data("platform")).slideRightShow(500);
+})</script>
+   <section class="features-block" id="home-subscription"  style="background:#FFF;">
+    <br />
+    <br />
+    <div class="container">
+     <h3 class="text-center">购买矿机转化为算力</h3>
+     <div class="row">
+      <div class="col-sm-6 text-center">
+       <br />
+       <br />
+       <img  style="height:250px;max-width:100%;" src="__INDEX__/img/S7.png" />
+       <br />
+       <br />
+      </div>
+      <div class="col-sm-5">
+       <br />
+       <br />
+       <h2 class="text-center" style="font-weight:bold;">xxx</h2>
+       <h5 class="text-center">价格:562 CNY (xxx)&nbsp;&nbsp;库存: 4</h5>
+       <div class="div-table">
+        <div class="div-tr">
+         <div class="div-td text-left">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <i class="icon-flash pull-right" style="color:#ffec42;font-size:20px; "></i>
+         </div>
+         <div class="div-td text-left" style="padding-left:10px;font-size:14px;">
+          功耗: xxx xxx
+          <br />维护费:￥354
+         </div>
+        </div>
+       </div>
+       <div class="col-sm-1"></div>
+       <br />
+       <form accept-charset="UTF-8"  class="ng-pristine ng-valid" data-remote="true" method="post">
+        <div class="div-table">
+         <div class="div-tr">
+          <div class="div-td">
+           <div class="input-group shop-input-group">
+            <span class="input-group-addon no-radius">数量</span>
+            <input class="form-control no-radius" name="amount" ng-model="amount" type="text" />
+           </div>
+          </div>
+          <div class="div-td" style="line-height:36px;font-size:18px;width:120px;text-indent:1em;">
+           &times;568 GHS
+          </div>
+         </div>
+        </div>
+        <br />
+        <button class="btn btn-shop-perchase" id="btn-shop-perchase"  type="submit">购买矿机转算力</button>
+        <!-- <button class="btn btn-shop-perchase out-of-stock" disabled="true" >已售馨</button> -->
+       </form>
+      </div>
+     </div>
+     <p class="text-center">*购买矿机转化为算力 下单到上架完成大约需要72小时</p>
+    </div>
+    <br />
+    <br />
+    <div class="container">
+     <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-1">
+        <img  style="height:100px;cursor:pointer;" src="__INDEX__/img/S7.png" />
+       <br />
+       <br />
+       <p>AntMinerL3+</p>
+      </div>
+      <div class="col-sm-1"></div>
+      <div class="col-sm-1" >
+       <img  style="height:100px;cursor:pointer;" src="__INDEX__/img/S7.png" />
+       <br />
+       <br />
+       <p>AntMinerL3+</p>
+      </div>
+      <div class="col-sm-1"></div>
+      <div class="col-sm-1">
+      <img  style="height:100px;cursor:pointer;" src="__INDEX__/img/S7.png" />
+       <br />
+       <br />
+       <p>AntMinerL3+</p>
+      </div>
+     </div>
+    </div>
+    <br />
+    <br />
+    <div>
+     <img class="pull-right" src="__INDEX__/img/powerbyantminer-ba48d92af12fa6ba3c7864bd5b27681689663b2a162cab877915a819df946a8e.png" />
+    </div>
+   </section>
+   <div class="purchase-s4"></div>
+   <script>$(document).ready(function(){
+  angular.bootstrap(document.getElementById("home-subscription"),["HashNest"]);
+});</script>
+   <div data-stellar-background-ratio="0.5" id="contract_section" style="background:#34343f;">
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="container" id="contract_top" style="position:relative;z-index: 1;margin-bottom:-50px;">
+     <div class="row stacked">
+      <div class="col-sm-4" data-animate="fadeInLeft" data-delay="0">
+       <img height="150" src="__INDEX__/img/cloud1-6ae8940db6a6839b2d10c2a9813a769c39e2423148526e6ea88e2d9b463afc83.png" width="230" />
+       <div class="home-card text-center">
+        <div style="line-height:80px;font-size:40px;color:#FFF;font-weight:bold;">
+         6.0T
+        </div>
+        <div style="color:#838A96;background:#EEF1F9;padding-top:20px;padding-bottom:40px;height:184px;">
+         <font style="font-size:36px;"> 1.0BTC</font>
+         <br />
+         <font style="font-size:16px;">每秒利润: </font>
+         <font style="font-size:16px;">0.45聪/BTC</font>
+         <br />
+         <font style="font-size:16px;">年化收益率: 14.1912%</font>
+        </div>
+        <div style="padding:10px;">
+         <a class="btn btn-noradius btn-warning" href="/contracts/new">PACMiC</a>
+        </div>
+       </div>
+      </div>
+      <div class="col-sm-8" data-animate="fadeInRight" data-delay="300" style="color:#FFFFFF;">
+       <br />
+       <br />
+       <br />
+       <br />
+       <h3 class="text-center">加速回本云挖矿合约(PACMiC)</h3>
+       <br />
+       <div class="row">
+        <div class="col-sm-4">
+         <h4><i class="icon-lightning" style="color:yellow;font-size:12px;"></i><i class="icon-blocked2" style="margin-left:-15px;margin-top:3px;"></i>&nbsp;无需电费 快速回本</h4>
+        </div>
+        <div class="col-sm-4">
+         <h4><i class="icon-heart-o"></i>&nbsp;额外每秒支付利润</h4>
+        </div>
+        <div class="col-sm-4">
+         <h4><i class="icon-clock-o"></i>&nbsp;爆块即时分配</h4>
+        </div>
+       </div>
+       <div class="row">
+        <div class="col-sm-4">
+         <h4><i class="icon-bulb"></i>&nbsp;PPLNS方式回款</h4>
+        </div>
+        <div class="col-sm-4">
+         <h4><i class="icon-table"></i>&nbsp;提供额外财务报表</h4>
+        </div>
+        <div class="col-sm-4">
+         <h4><i class="icon-globe"></i>&nbsp;全球节点部署</h4>
+        </div>
+       </div>
+       <br />
+       <br />
+       <br />
+       <br />
+       <div class="text-center">
+        <a class="btn btn-white-1" href="/contracts/new" style="width:300px;color:#5d73cb;">合约认购</a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="div-table" id="home_block_chart"></div>
+   <script>$(document).ready(function(){
+
+  var chart_data = [[1512864000000, 29], [1512950400000, 28], [1513036800000, 39], [1513123200000, 41], [1513209600000, 34], [1513296000000, 26], [1513382400000, 27], [1513468800000, 34], [1513555200000, 39], [1513641600000, 18], [1513728000000, 36], [1513814400000, 15], [1513900800000, 21], [1513987200000, 36], [1514073600000, 6], [1514160000000, 42], [1514246400000, 2]];
+
+  drawHomeBlockAreaMap(chart_data);
+
+  $(window).on("resize",function(){
+    drawHomeBlockAreaMap(chart_data);
+  });
+});</script>
+   <section class="services-block" style="background:rgb(238, 241, 248);">
+    <div class="container">
+     <row>
+      <div class="col-sm-12">
+       <div class="tabs-home" id="tabs-home">
+        <i class="icon-location"></i>
+        <a class="active" data="antpool2">矿场相册</a>
+       </div>
+       <div class="tab-content-home" id="tab-content-home">
+        <div class="tab-pane-home show" id="antpool2">
+         <p style="line-height:30px;">&nbsp;</p>
+         <div class="row zoom-gallery">
+          <div class="col-sm-4">
+           <a class="gallery-item effect-milo" data-source="https://dn-bitmain.qbox.me/FjILZ6ijpKwgbiA3kfYKtxLEMQ1T" href="https://dn-bitmain.qbox.me/FjILZ6ijpKwgbiA3kfYKtxLEMQ1T" title="Mining Farm Photos"><img src="__INDEX__/img/FjILZ6ijpKwgbiA3kfYKtxLEMQ1T.png" /></a>
+          </div>
+          <div class="col-sm-4">
+           <a class="gallery-item effect-milo" data-source="https://dn-bitmain.qbox.me/Fjdwg_Xmvfv8snuWbLOEMTboURTQ" href="https://dn-bitmain.qbox.me/Fjdwg_Xmvfv8snuWbLOEMTboURTQ" title="Mining Farm Photos"><img src="__INDEX__/img/Fjdwg_Xmvfv8snuWbLOEMTboURTQ.png" /></a>
+          </div>
+          <div class="col-sm-4">
+           <a class="gallery-item effect-milo" data-source="https://dn-bitmain.qbox.me/FpAi2U3NZsDW_QJkKpwrw4dYGypj" href="https://dn-bitmain.qbox.me/FpAi2U3NZsDW_QJkKpwrw4dYGypj" title="Mining Farm Photos"><img src="__INDEX__/img/FpAi2U3NZsDW_QJkKpwrw4dYGypj.png" /></a>
+          </div>
+          <div class="col-sm-4">
+           <a class="gallery-item effect-milo" data-source="https://dn-bitmain.qbox.me/Fm22FuZiuLrj61QPPoMtwrFDXJBU" href="https://dn-bitmain.qbox.me/Fm22FuZiuLrj61QPPoMtwrFDXJBU" title="Mining Farm Photos"><img src="__INDEX__/img/Fm22FuZiuLrj61QPPoMtwrFDXJBU.png" /></a>
+          </div>
+          <div class="col-sm-4">
+           <a class="gallery-item effect-milo" data-source="https://dn-bitmain.qbox.me/FjOCp5sjq4NUljwrfJYzg_0p4iVZ" href="https://dn-bitmain.qbox.me/FjOCp5sjq4NUljwrfJYzg_0p4iVZ" title="Mining Farm Photos"><img src="__INDEX__/img/FjOCp5sjq4NUljwrfJYzg_0p4iVZ.png" /></a>
+          </div>
+          <div class="col-sm-4">
+           <a class="gallery-item effect-milo" data-source="https://dn-bitmain.qbox.me/Fn3Xri4b2c5WnVI2SVpISKglMos4" href="https://dn-bitmain.qbox.me/Fn3Xri4b2c5WnVI2SVpISKglMos4" title="Mining Farm Photos"><img src="__INDEX__/img/Fn3Xri4b2c5WnVI2SVpISKglMos4.png" /></a>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </row>
+    </div>
+   </section>
+   <script>$("#tabs-home a").on("click",function(){
+    $("#tabs-home i").remove();
+    $("#tabs-home a.active").removeClass("active");
+    $(this).addClass("active").before("<i class='icon-location'></i>");
+    $("#tab-content-home .tab-pane-home").hide();
+    id = $(this).attr("data");
+    $("#" + id).show();
+  });
+
+  //pictures
+$('.zoom-gallery').magnificPopup({
+  delegate: 'a.gallery-item',
+  type: 'image',
+  closeOnContentClick: false,
+  closeBtnInside: false,
+  mainClass: 'mfp-with-zoom mfp-img-mobile',
+  image: {
+    verticalFit: true,
+    titleSrc: function(item) {
+      return item.el.attr('title');
+    }
+  },
+  gallery: {
+    enabled: true
+  },
+  zoom: {
+    enabled: true,
+    duration: 300,
+    opener: function(element) {
+      return element.find('img');
+    }
+  }
+});</script>
+{include file="common/footer" /}
+   <script>function resizeWindow(){
+  var window_height = $(window).height();
+  var top = $("header").height();
+  var bottom = $("footer").height();
+
+  var temp = window_height - top - bottom;
+  $(".main-container").css("height",temp);
+
+  var main_window_height = $(".main-container").height();
+
+  if(main_window_height){
+    $('.auto-height-right').css("min-height", main_window_height - 130);
+  }else{
+    $('.auto-height-right').css("min-height", temp);
+  }
+}
+
+$(window).on("resize",function(){
+    resizeWindow();
+  });</script>
+   <script>var resizefunc = [];</script>
+
+  </div>
+ </body>
+</html>

@@ -1,0 +1,240 @@
+{include file="common/header" /}
+<title><?=$title;?></title>
+<style>
+    .pro_list{
+        margin: 155px auto;
+        margin-bottom: 20px;
+    }
+    .mill_detail{
+        display: flex;
+        felx-direction:row;
+        justify-content:center;
+        margin-bottom: 20px;
+    }
+    .mill_img{
+        width:400px;
+        height:275px;
+        margin:0 180px 0 0;
+    }
+    .mill_detail_desc{
+        padding-top:50px;
+    }
+    .mill_detail_desc p{
+        margin-bottom:15px;
+        font-size:18px;
+    }
+    .mill_detail_desc strong{
+        font-size:24px;
+    }
+    .mill_detail_desc p:nth-child(1){
+        margin-bottom:10px;
+    }
+    .mill_detail_desc p:nth-child(2){
+        margin-bottom:10px;
+    }
+    .num{
+        width:50px;
+        display:inline-block;
+        height: 32px;
+        text-align:center;
+        padding-left:0;
+    }
+    .mill_num_group a{
+        width: 32px;
+        height: 32px;
+        border-color: #e6e6e6;
+        font-size:16px;
+    }
+    .mill_desc_list{
+        margin:0 0 20px 0;
+    }
+    .mill_desc_list .mill_describe{
+        padding-left: 2em;
+        line-height:2em;
+    }
+    .method{
+        padding: 7px 15px 7px 15px;
+        border:1px solid #ccc;
+        border-radius:3px;
+        margin-left:100px;
+        margin-bottom:10px;
+        cursor:pointer;
+    }
+    .method.active{
+        border-color:red;
+    }
+    .lengthtime{
+        overflow: hidden;
+    }
+    .lengthtime p{
+        float:left;
+    }
+    .lengthtime select{
+        float:left;
+        border:1px solid #ccc;
+    }
+</style>
+
+<div class="layui-main pro_list">
+    <section class="mill_list">
+        <div class="mill_detail">
+            <!---->
+            <div class="mill_img">
+                <img src="<?=$mill['mill_img']?>" width="100%" height="100%" alt="">
+            </div>
+            <form action="" method="post" id="formMill">
+            <div class="mill_detail_desc">
+                <p><strong><?=$mill['mill_name']?></strong></p>
+                <p><span><?=$mill['mill_intro']?></span></p>
+                <p><span>价格：<span style="color:#FF5722;font-size:16px;">￥ <?=$mill['mill_price']?> CNY</span></span></p>
+                <p><span>重量：<?=$mill['mill_weight']?>kg</span></p>
+                <p><span>功耗：<?=$mill['mill_power']?>Kw/h</span></p>
+                <div class="lengthtime">
+                    <p>购买时长：
+                    </p>
+                    <select name="lengthtime">
+                    <?php foreach($milltime as $val){ ?>
+                        <option value="<?=$val['mouth']?>">
+                        <?=$val['mouth']?><span>个月</span>
+                        </option>
+                        
+                    <?php } ?>
+                </select>
+                </div>
+                <p class="mill_num_group">
+                    <span>数量：</span>
+                        <a class="layui-btn layui-btn-primary layui-btn-sm" data-type="redus">-</a>
+                        <input type="text" class="layui-input layui-inline num" name="num" value="1" min="1">
+                        <a class="layui-btn layui-btn-primary layui-btn-sm" data-type="add">+</a>
+                    <input type="hidden" name="mid" value="<?=$mill['mid']?>">
+                </p>
+                <p><a class="layui-btn layui-btn-danger addcart"  data-type="addcart"><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop" style="font-size:18px;font-color:white;"></i>加入购物车</a></p>
+            </div>
+            </form>
+        </div>
+    </section>
+    <section class="mill_desc_list">
+        <blockquote class=" layui-elem-quote">产品描述</blockquote>
+        <div class="mill_describe">
+           <?=$mill['mill_describe']?>
+        </div>
+    </section>
+    <section class="mill_desc_list">
+        <blockquote class=" layui-elem-quote">产品介绍</blockquote>
+        <div class="mill_describe">
+            <?=$mill['mill_arguments']?>
+        </div>
+    </section>
+
+    <section class="mill_desc_list">
+        <blockquote class=" layui-elem-quote">售后政策</blockquote>
+        <div class="mill_describe">
+            <?=$mill['mill_saleAfter']?>
+        </div>
+    </section>
+
+</div>
+
+{include file="common/footer" /}
+
+</div>
+<script>
+     $(document).on('click','.method',function(){
+        $('.method').removeClass('active');
+        $(this).addClass('active');
+    });
+</script>
+<script>
+    layui.use('layer',function(){
+        var $ = layui.jquery,
+                layer = layui.layer;
+        var $ = layui.$, active = {
+           add:function(){
+               var num = $('.num').val();
+               $('.num').val(parseInt(num)+1);
+           },
+            redus:function(){
+                var num = $('.num').val();
+                var n = parseInt(num)-1;
+                if(n <= 1){
+                    n=1;
+                }
+                $('.num').val(n);
+            },
+            addcart:function(){
+                var num = $('.num').val();
+                var reg = /^[1-9]\d*$/;
+                if(!reg.test(num)){
+                    layer.msg('数量必须为正整数！');
+                    return false;
+                }
+                $.ajax({
+                    url:'/addCart',
+                    type:'post',
+                    data:$('#formMill').serialize(),
+                    beforeSend:function(){
+                        $('.addcart i').html('&#xe63d;');
+                        $('.addcart').data('type','');
+
+                    },
+                    success:function(data){
+                        $('.addcart i').html('');
+                        $('.addcart').data('type','addcart');
+                        if(data.code == 1){
+                            layer.msg(data.msg,{time:900},function(){
+                                layer.msg('正在前往购物车.....', {
+                                    icon: 16
+                                    ,shade: 0.01
+                                });
+                                location.href=data.url;
+                            });
+                            return false;
+                        }else if(data.code == 0){
+                            layer.msg(data.msg,{time:1200},function(){
+
+                                location.href=data.url;
+                            });
+                            return false;
+                        }
+                    },
+                    error:function(){
+                        $('.addcart i').html('');
+                        $('.addcart').data('type','addcart');
+                        layer.msg('网络错误,请重试...',{time:1200});
+                        return false;
+                    }
+                })
+            }
+
+        };
+        $('.mill_detail_desc a').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+</script>
+<script>
+    function resizeWindow(){
+    var window_height = $(window).height();
+    var top = $("header").height();
+    var bottom = $("footer").height();
+
+    var temp = window_height - top - bottom;
+    $(".main-container").css("height",temp);
+
+    var main_window_height = $(".main-container").height();
+
+    if(main_window_height){
+        $('.auto-height-right').css("min-height", main_window_height - 130);
+    }else{
+        $('.auto-height-right').css("min-height", temp);
+    }
+}
+
+$(window).on("resize",function(){
+    resizeWindow();
+});</script>
+<script>var resizefunc = [];</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+{include file="common/header" /}
+<title><?=$title;?></title>
+<style>
+    .pro_list{
+        margin: 155px auto;
+        margin-bottom: 20px;
+    }
+    .buyType{
+        margin:20px 0 20px 0;
+    }
+    .buyType label{
+        width:200px;
+        height:100px;
+        border:1px solid #ccc;
+        border-radius:5px;
+        text-align:center;
+        line-height:100px;
+    }
+    .buyType label.active{
+        border-color:red;
+    }
+    .payBtn{
+        margin:25px 0 0 0;
+        height:80px;
+    }
+    .payBtn a{
+        float:right
+    }
+</style>
+
+<div class="layui-main pro_list">
+    <section class="mill_list">
+        <div class="layui-elem-quote">选择支付方式</div>
+        <div class="buyType">
+            <label class="active">
+                <input type="radio" style="display:none;" name="payType" checked>
+                银行卡支付
+            </label>
+            <!--<label>-->
+
+            <!--</label>-->
+        </div>
+
+        <div class="layui-elem-quote">订单详情</div>
+        <div class="orderDetail">
+            <table class="layui-table">
+                <tbody>
+                <tr >
+                    <td align="right"><strong>订单号</strong></td>
+                    <td><?=$orderInfo['order_id']?></td>
+                </tr>
+                <tr>
+                    <td align="right"><strong>订单金额</strong></td>
+                    <td><strong style="color:red;">￥<?=$orderInfo['order_price']?> CNY</strong></td>
+
+                </tr>
+                <tr >
+                    <td align="right"><strong>配送方式</strong></td>
+                    <td><strong><?=$orderInfo['deliveryMethod']?></strong></td>
+                </tr>
+                <tr >
+                    <td align="right"><strong>配送地址</strong></td>
+                    <td>
+                        <?=implode('，',json_decode($orderInfo['shippingAddress'],true)); ?>
+
+                    </td>
+                </tr>
+                <tr >
+                    <td align="right"><strong>商品详情</strong></td>
+                    <td>
+                        <?php $order_detail = json_decode($orderInfo['order_detailInfo'],true); ?>
+                        <?php foreach($order_detail as $order){?>
+                            <p><b><?=$order['mill_name'];?></b> &nbsp; 数量: <strong><?=$order['order_num'];?></strong>件 &nbsp; 
+                            购买时长: <strong><?=$order['lengthTime'];?></strong>个月 &nbsp;
+                            单价: <strong>￥<?=$order['mill_price'];?> CNY</strong></p>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <tr >
+                    <td align="right"><strong>订单备注</strong></td>
+                    <td><?=!empty($orderInfo['order_describe'])?$orderInfo['order_describe']:'无';?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="payBtn">
+            <a class="layui-btn layui-btn-normal">立即支付</a>
+        </div>
+    </section>
+
+</div>
+
+{include file="common/footer" /}
+
+</div>
+<script>
+    layui.use('layer',function(){
+        var $ = layui.jquery,
+                layer = layui.layer;
+        var $ = layui.$, active = {
+            add:function(){
+                var num = $('.num').val();
+                $('.num').val(parseInt(num)+1);
+            },
+            redus:function(){
+                var num = $('.num').val();
+                var n = parseInt(num)-1;
+                if(n <= 1){
+                    n=1;
+                }
+                $('.num').val(n);
+            },
+            addcart:function(){
+//                var num = $('.num').val();
+//                var reg = /^[1-9]\d*$/;
+//                if(!reg.test(num)){
+//                    layer.msg('数量必须为正整数！');
+//                    return false;
+//                }
+                $.ajax({
+                    url:'/addCart',
+                    type:'post',
+                    data:$('#formMill').serialize(),
+                    beforeSend:function(){
+                        $('.addcart i').html('&#xe63d;');
+                        $('.addcart').data('type','');
+
+                    },
+                    success:function(data){
+                        $('.addcart i').html('');
+                        $('.addcart').data('type','addcart');
+                        if(data.code == 1){
+                            layer.msg(data.msg,{time:1200},function(){
+                                location.href=data.url;
+                            });
+                            return false;
+                        }else if(data.code == 0){
+                            layer.msg(data.msg,{time:1200},function(){
+                                location.href=data.url;
+                            });
+                            return false;
+                        }
+                    },
+                    error:function(){
+                        $('.addcart i').html('');
+                        $('.addcart').data('type','addcart');
+                        layer.msg('网络错误,请重试...',{time:1200});
+                        return false;
+                    }
+                })
+            }
+
+        };
+        $('.mill_detail_desc a').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+</script>
+<script>
+    function resizeWindow(){
+        var window_height = $(window).height();
+        var top = $("header").height();
+        var bottom = $("footer").height();
+
+        var temp = window_height - top - bottom;
+        $(".main-container").css("height",temp);
+
+        var main_window_height = $(".main-container").height();
+
+        if(main_window_height){
+            $('.auto-height-right').css("min-height", main_window_height - 130);
+        }else{
+            $('.auto-height-right').css("min-height", temp);
+        }
+    }
+
+    $(window).on("resize",function(){
+        resizeWindow();
+    });</script>
+<script>var resizefunc = [];</script>
+</body>
+</html>

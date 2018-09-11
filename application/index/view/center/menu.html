@@ -1,0 +1,50 @@
+<style>
+    #left_nav{
+        width:250px;
+        height:100%;
+    }
+</style>
+<ul class="layui-nav layui-nav-tree  layui-inline" id="left_nav" lay-filter="demo">
+    <li class="layui-nav-item layui-nav-itemed">
+        <a href="javascript:;"><i class="layui-icon" style="font-size:18px;color:rgba(255,255,255,.9);">&#xe612;</i> 我的账户</a>
+        <dl class="layui-nav-child">
+            <dd id="member_info"><a href="/member/member_info">账户信息</a></dd>
+            <!-- <dd><a href="javascript:;">钱包</a></dd> -->
+            <dd id="my_wallet"><a href="/member/my_wallet">钱包</a></dd>
+            <dd id="shipping_address"><a href="/member/shipping_address">配送地址</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;"><i class="layui-icon" style="font-size:18px;color:rgba(255,255,255,.9);">&#xe698;</i>  我的订单</a>
+        <dl class="layui-nav-child">
+            <dd id="my_order"><a href="/member/my_order">订单列表</a></dd>
+
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;"><i class="layui-icon" style="font-size:18px;color:rgba(255,255,255,.9);">&#xe705;</i>  合约</a>
+        <dl class="layui-nav-child">
+            <dd id="myContract"><a href="/member/myContract">我的合约</a></dd>
+
+        </dl>
+    </li>
+
+    <li class="layui-nav-item">
+        <a href=""><i class="layui-icon" style="font-size:18px;color:rgba(255,255,255,.9);">&#xe63a;</i>  论坛</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href=""><i class="layui-icon" style="font-size:18px;color:rgba(255,255,255,.9);">&#xe63b;</i>  App</a>
+    </li>
+    <li class="layui-nav-item">
+        <a href=""><i class="layui-icon" style="font-size:18px;color:rgba(255,255,255,.9);">&#xe607;</i>  支持</a>
+    </li>
+
+</ul>
+<script>
+    $('#left_nav li').removeClass('layui-nav-itemed');
+    $('#left_nav dd').removeClass('layui-this');
+    var url = location.href;
+    var arr = url.split('/');
+    $('#'+arr[arr.length-1]).addClass('layui-this');
+    $('#'+arr[arr.length-1]).parent().parent().addClass('layui-nav-itemed');
+</script>

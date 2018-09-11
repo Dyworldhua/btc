@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ajax测试</title>
+    <style>
+        div{
+            margin:50px;
+            text-align:center;
+        }
+        input[class=test]{
+            width:200px;
+        }
+        .put{
+            margin-top:10px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <input type="text" class="test"><br/>
+        <button class="put">提交</button>
+    </div>
+</body>
+<script>
+    $('.put').click(function(){
+        var value = $('.test').val(); // 获取输入的文本值
+        var data = {
+            'value':value
+        };
+        //console.log(data);
+        $.ajax({
+            url:'/returnajax',
+            data:data,
+            type:'post',
+            success:function(data){
+                if(data.code==1){
+                    alert(data.msg);
+                }
+            }
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="__INDEX__/layui2.2.5/css/layui.css">
+    <script src="__INDEX__/layui2.2.5/layui.js"></script>
+    <script src="__INDEX__/js/jquery.min.js"></script>
+    <title>价格明细</title>
+    <style>
+        p{
+            margin-left:20px;
+        }
+        p a{
+            color:red;
+            margin-right:5px;
+        }
+        p span{
+            font-size:14px;
+            color:rgb(88, 82, 82);
+        }
+    </style>
+</head>
+<body>
+    <p><i class="layui-icon layui-icon-speaker" style="font-size:20px;margin-right:10px;"></i><span>功耗计算公式为：购买时长&nbsp;&nbsp;X&nbsp;&nbsp;30（天）X&nbsp;&nbsp;24（小时）&nbsp;&nbsp;X&nbsp;&nbsp;功耗</span></p>
+    <table class="layui-table">
+        <thead>
+            <th>产品名称</th>
+            <th>购买数量</th>
+            <th>购买时长</th>
+            <th>单价</th>
+            <th>功耗</th>
+            <th>总价</th>
+        </thead>
+    <?php foreach($charge as $val){ ?>
+        <tr>
+            <td><?=$val['mill_name']?></td>
+            <td><?=$val['order_num']?>个</td>
+            <td><?=$val['lengthTime']?>个月</td>
+            <td><?=$val['mill_price']?>&nbsp;CNY</td>
+            <td><?=$val['mill_power']?>Kw/h</td>
+            <td><?php echo ($val['order_num']*$val['mill_price'])+($val['lengthTime']*30*24*$val['mill_power']);?>&nbsp;CNY</td>
+        </tr>
+    <?php }?>
+    </table>
+</body>
+<script>
+    layui.use(['table'],function(){
+        var layer = layui.layer;
+    });
+</script>
+</html>

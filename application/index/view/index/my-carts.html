@@ -1,0 +1,488 @@
+{include file="common/header" /}
+<title><?=$title;?></title>
+<style>
+    .pro_list{
+        margin: 155px auto;
+        margin-bottom: 20px;
+    }
+    .order_num{
+        padding-left: 0;
+        text-align: center;
+        width: 40px;
+    }
+    .order_num_btns{
+        display: block;
+    }
+    .order_num_btns a,.order_num_btns input{
+        display:inline-block;
+        height: 25px;
+        line-height:25px;
+
+    }
+    
+    table input[type="checkbox"]{
+        width:15px;
+        height:15px;
+    }
+    .title_dec{
+        margin: 0;
+        height: 40px;
+        padding: 10px;
+    }
+    .padding_none{
+        border:none !important;
+        padding:10px 0 10px 0 !important;
+    }
+    #address{
+        line-height:2.5em;
+    }
+    .detaddress{
+        margin-top:15px;
+        padding: 3px 10px 3px 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        cursor: pointer;
+        display:inline-block;
+        width: 48%;
+        margin-right: 10px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+    .detaddress.active{
+        border:1px solid red;
+    }
+    .method{
+        padding: 7px 15px 7px 15px;
+        border:1px solid #ccc;
+        border-radius:3px;
+        margin-right:5px;
+        cursor:pointer;
+    }
+    .method.active{
+        border-color:red;
+    }
+    .agreement{
+        float:right;
+    }
+    .reduce{
+        margin-right:10px;
+        display:inline-block;
+        border:1px solid #ccc;
+        width:15px;
+    }
+    .add{
+        margin-left:10px;
+        display:inline-block;
+        border:1px solid #ccc;
+        width:15px;
+    }
+    select{
+        border:1px solid #ccc;
+    }
+    .charge{
+        font-size:12px;
+        margin-left:10px;
+        cursor:pointer;
+    }
+</style>
+<div class="layui-main pro_list">
+    <section class="mill_list">
+        <table class="layui-table" id="tab">
+            <tr>
+                <td colspan="7" class="padding_none"><div class="layui-elem-quote title_dec">订单详情</div></td>
+            </tr>
+            <tr align="center" class="t-head">
+                <td></td>
+                <td>商品名称</td>
+                <td>商品单价</td>
+                <td>商品数量</td>
+                <td>购买时长</td>
+                <td>小计</td>
+                <td style="border-style:none;"></td>
+            </tr>
+            <form class="layui-form" action="" id="orderFrom">
+                <?php $total = 0; if($myCarts){ foreach($myCarts as $myCart){
+            $total += ($myCart['order_num']*$myCart['mill_price'])+($myCart['lengthTime']*30*24*$myCart['mill_power']);
+            ?>
+                <tr align="center" class="detail">
+                    <td>
+                        <input type="checkbox" onclick="changed(this,<?=$myCart['order_num']*$myCart['mill_price']?>)" name="pro[]" id="ck<?=$myCart['id']?>" title="" value="<?=$myCart['mid']?>" checked class="orders" lay-skin="primary">
+                    </td>
+                    <td><?=$myCart['mill_name']?></td>
+                    <td>￥<span class="price<?=$myCart['id']?>"><?=$myCart['mill_price']?></span> CNY</td>
+                    <td>
+                        <input type="hidden" class="buyval<?=$myCart['id']?>" value="<?=$myCart['mill_buyVal']?>"/>
+                        <input type="hidden" class="power<?=$myCart['id']?>" value="<?=$myCart['mill_power']?>"/>
+                        <span class="reduce" onclick="reduceclick(<?=$myCart['id']?>,1)" style="cursor:pointer;">-</span>
+						<input class="num<?=$myCart['id']?>" name="num" onclick="add_num(<?=$myCart['id']?>)" type="text" value="<?=$myCart['order_num']?>" maxlength="2" style="width:20px;text-align: center;border:1px solid #ccc;"/>
+						<span class="add" onclick="addclick(<?=$myCart['id']?>,1)" style="cursor: pointer;">+</span>
+                    </td>
+                    <td>
+                        <select class="length<?=$myCart['id']?>" name="length">
+                            <?php foreach($lengthtime as $val){?>
+                            <option onclick="lengthedit(<?=$myCart['id']?>)" value="<?=$val['mouth']?>" <?php if($myCart['lengthTime']==$val['mouth']){echo "selected = 'selected'";}?> >
+                                <?=$val['mouth']?><span>个月</span>
+                            </option>
+                            <?php }?>
+                        </select>
+                    </td>
+                    <td class="subtotal<?=$myCart['id']?>">￥<?=($myCart['order_num']*$myCart['mill_price'])+($myCart['lengthTime']*30*24*$myCart['mill_power'])?> CNY</td>
+                    <td>
+                        <a class="layui-btn layui-btn-xs layui-btn-warm" onclick="delOrder(this,<?=$myCart['mid']?>)">删除</a>
+                    </td>
+                </tr>
+                <?php }  ?>
+                <tr>
+                    <td colspan="7" class="padding_none"><div class="layui-elem-quote title_dec">配送地址</div></td>
+                </tr>
+                <tr >
+                    <td align="center"><a class="layui-btn layui-btn-sm layui-btn-warm" onclick="addAddress()">添加地址</a></td>
+                    <td colspan="5" id="address">
+                        <?php if($address){ foreach($address as $adre){
+                        $addres = json_decode($adre['address']);
+                    ?>
+                        <label class="detaddress" title="<?=$adre['linkName']?> , <?=$adre['linkPhone']?> , <?=$adre['postcode']?> , <?=$addres[0]?> , <?=$addres[1]?> ,  <?=$addres[2]?> , <?=$addres[3]?> , <?=$addres[4]?>">
+                            <input style="display:none;" type="radio" name="address" value="<?=$adre['id']?>">
+                            <?=$adre['linkName']?> , <?=$adre['linkPhone']?> , <?=$adre['postcode']?> , <?=$addres[0]?> , <?=$addres[1]?>   <?=$addres[2]?>  <?=$addres[3]?>  <?=$addres[4]?>
+                        </label>
+                        <?php }} ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7" class="padding_none"><div class="layui-elem-quote title_dec">配送方式</div></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="5" id="methods">
+                        <?php foreach($methods as $method){ ?>
+                        <label class="method">
+                            <input type="radio" style="display:none;" name="method" value="<?=$method['id']?>">
+                            <?=$method['methodName'];?>
+                        </label> 
+
+                        <?php } ?>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="7" class="padding_none"><div class="layui-elem-quote title_dec">订单备注</div></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="5">
+                        <textarea name="orderDescribe" class="layui-textarea" placeholder="订单备注，比如对配送方式、配送时间的特殊要求" id="" rows="1"></textarea>
+                    </td>
+                </tr>
+                <tr align="center">
+                    <td><strong>总计：</strong></td>
+                    <td align="left" colspan="4">
+                        <strong style="color:red;">￥<span id="totalPrice" class="allPrice"><?=$total?></span> CNY
+                        <a class="charge" onclick="chargeDetail()"><i class="layui-icon layui-icon-rmb" style="font-size: 14px; color: #000;margin-right:3px;"></i>价格明细</a>
+                    </strong>
+                       <span class="agreement"><input type="checkbox" name="agreement" checked value="1"> <a class="buyagre"> 购买协议</a></span>
+                    </td>
+                    <td>
+                        <a class="layui-btn layui-btn-danger sub_btn" data-type="sub_order"><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop" style="font-size:18px;"></i>提交订单</a>
+                    </td>
+                </tr>
+                <?php  }else{ ?>
+                <tr align="center">
+                    <td colspan="6">暂无商品</td>
+                </tr>
+                <?php }?>
+            </form>
+        </table>
+    </section>
+    
+</div>
+{include file="common/footer" /}
+
+</div>
+<script>
+    function add_num(id){
+        var first_num = $(".num"+id).val();
+        var buyval = $('.buyval'+id).val() // 当前商品最大购买量
+        var pid = id;
+        $(".num"+id).blur(function(){
+            var second_num = $(this).val();
+            if(parseInt(second_num) > parseInt(buyval)){
+                layer.msg('当前最大购买数量为'+buyval)
+                $(this).val(parseInt(buyval))
+                second_num = buyval;
+            }
+            var num_price = parseInt($('.num'+id).val())*parseInt($('.price'+id).html()) // 数量总价
+            var power_price = parseInt($('.length'+id).val())*30*24*parseInt($('.power'+id).val()) // 功耗总价
+		    $('.subtotal'+id).html(num_price+power_price);
+
+            if(first_num!==second_num){
+                var code = {
+                    'second_num':second_num,
+                    'pid':pid
+                }
+                $.ajax({
+                    url:'/cartProEdit',
+                    data:code,
+                    type:'post'
+                })
+                total();
+            }
+        })
+        
+    }
+    function lengthedit(id){
+        var length = $('.length'+id).val();
+        var pid = id
+            var num_price = parseInt($('.num'+id).val())*parseInt($('.price'+id).html()) // 数量总价
+            var power_price = parseInt($('.length'+id).val())*30*24*parseInt($('.power'+id).val()) // 功耗总价
+		    $('.subtotal'+id).html(num_price+power_price);
+                var code = {
+                    'new_length':length,
+                    'pid':pid
+                }
+                $.ajax({
+                    url:'/cartProEdit',
+                    data:code,
+                    type:'post'
+                })
+                total();    
+    }
+    function changed(){
+        total();
+    }
+    function total(){
+        var price = 0;
+        $('.orders').each(function(){
+            if($(this).is(':checked')){
+                var nid = $(this).attr('id').substring(2);
+                var num_price = parseInt($('.num'+nid).val())*parseInt($('.price'+nid).html()) // 数量总价
+                var power_price = parseInt($('.length'+nid).val())*30*24*parseInt($('.power'+nid).val()) // 功耗总价
+                price+=num_price+power_price
+            }
+        })
+        $('.allPrice').html(price);
+    }
+    
+	function addclick(id)
+	{
+        var buyval = $('.buyval'+id).val() // 当前商品最大购买量
+        var aaa = $('.num'+id).val()
+            if( parseInt(buyval) > parseInt(aaa)){
+                $('.num'+id).val(parseInt(aaa)+1)  
+            }else{
+                layer.msg('当前最大购买数量为'+buyval)
+            }
+        var num_price = parseInt($('.num'+id).val())*parseInt($('.price'+id).html()) // 数量总价
+        var power_price = parseInt($('.length'+id).val())*30*24*parseInt($('.power'+id).val()) // 功耗总价
+		$('.subtotal'+id).html(num_price+power_price);
+        mid = id;
+        var num = $(".num"+id).val();
+        var length = $(".length"+id).val();
+        var data = {
+            'num':num,
+            'length':length,
+            'id':mid
+        }
+        $.ajax({
+            url:'/cartProEdit',
+            data:data,
+            type:'post'
+        })
+        total();
+	}
+
+	function reduceclick(id)
+	{
+        if(parseInt($('.num'+id).val())>1)
+		{
+			$('.num'+id).val(parseInt($('.num'+id).val())-1)
+        }   
+		var num_price = parseInt($('.num'+id).val())*parseInt($('.price'+id).html()) // 数量总价
+        var power_price = parseInt($('.length'+id).val())*30*24*parseInt($('.power'+id).val()) // 功耗总价
+		$('.subtotal'+id).html(num_price+power_price);
+            cid = id;
+            var num = $(".num"+id).val();
+            var length = $('.length'+id).val();
+            var data = {
+                'num':num,
+                'id':cid,
+                'length':length
+            }
+        $.ajax({
+            url:'/cartProEdit',
+            data:data,
+            type:'post'
+        })
+        total();
+	}
+</script>
+<script>
+    changeradio();
+    function changeradio(){
+        $('#address label').removeClass('active');
+        $('#address input').eq(0).prop('checked',true);
+        $('#address label').eq(0).addClass('active');
+
+        $('#methods label').removeClass('active');
+        $('#methods input').eq(0).prop('checked',true);
+        $('#methods label').eq(0).addClass('active');
+    }
+    $(document).on('click','#address label',function(){
+        $('#address label').removeClass('active');
+        $(this).addClass('active');
+    });
+    $(document).on('click','#methods label',function(){
+        $('#methods label').removeClass('active');
+        $(this).addClass('active');
+    });
+</script>
+
+<script>
+    //添加配送地址
+    function addAddress(){
+        layer.open({
+            title:'添加配送地址',
+            type: 2,
+            area: ['500px', '600px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: '/member/addAddress'
+        });
+    }
+    //收费明细
+    function chargeDetail(){
+        var mid = [];
+        $('.orders').each(function(){
+            if($(this).is(':checked')){
+                mid.push($(this).val())
+            }
+        })
+        if(mid.length == 0){
+            layer.msg('当前没有勾选产品');
+            return false;
+        }
+        layer.open({
+            title:'价格明细',
+            type:2,
+            area:['800px','600px'],
+            fixed:false,
+            maxmin:true,
+            content:'/chargeDetail/'+mid
+        })
+    }
+    //删除订单
+    function delOrder(obj,id){
+        layer.confirm('确定要删除吗？',function(){
+            var index = '';
+            $.ajax({
+                url:'/delOrder/'+id,
+                type:'GET',
+                data:'',
+                beforeSend:function(){
+                    index = layer.load(0, {
+                        shade: [0.5,'#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success:function(data){
+                    layer.close(index);
+                    if(data.code == 1){
+                        //total()
+                        $(obj).parent().parent('tr').remove();
+                        layer.msg(data.msg,function(){
+                            location.reload();
+                        });
+                        return false;
+                    }else if(data.code == 0){
+                        layer.msg(data.code);
+                        return false;
+                    }
+                    console.log(data);
+                },error:function(){
+                    layer.close(index);
+                    layer.msg('网络错误，请重试...',{time:1200});
+                    return false;
+                }
+            })
+        })
+    }
+    layui.use('layer',function(){
+        var $ = layui.jquery,
+                layer = layui.layer;
+        var $ = layui.$, active = {
+            sub_order:function(){
+                if(!$('.orders').is(':checked')){
+                    layer.msg('请选择要支付的选项！');
+                    return false;
+                }
+                var address = $.trim($('#address').text());
+                if(address == ''){
+                    layer.msg('请选择配送地址！');
+                    return false;
+                }
+                if(!$('input[name="agreement"]').is(':checked')){
+                    layer.msg('请先同意购买协议！');
+                    return false;
+                }
+                $.ajax({
+                    url:'/addOrder',
+                    type:'post',
+                    data:$('#orderFrom').serialize(),
+                    beforeSend:function(){
+                        $('.sub_btn i').html('&#xe63d;');
+                        $('.sub_btn').data('type','');
+                    },
+                    success:function(data){
+                        // console.log(data);
+                        $('.sub_btn i').html('');
+                        $('.sub_btn').data('type','sub_order');
+                        if(data.code == 1){
+                            layer.msg(data.msg,{time:1200},function(){
+                                location.href=data.url;
+                            });
+                            return false;
+                        }else if(data.code == 0){
+                            layer.msg(data.msg);
+                            return false;
+                        }
+                    },
+                    error:function(){
+                        $('.sub_btn i').html('');
+                        $('.sub_btn').data('type','sub_order');
+                        layer.msg('网络错误,请重试...',{time:1200});
+                        return false;
+                    }
+                })
+            }
+
+        };
+        $('.sub_btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+<script>
+    function resizeWindow(){
+        var window_height = $(window).height();
+        var top = $("header").height();
+        var bottom = $("footer").height();
+
+        var temp = window_height - top - bottom;
+        $(".main-container").css("height",temp);
+        $('input[name="layTableCheckbox"]').prop('checked',true);
+        var main_window_height = $(".main-container").height();
+
+        if(main_window_height){
+            $('.auto-height-right').css("min-height", main_window_height - 130);
+        }else{
+            $('.auto-height-right').css("min-height", temp);
+        }
+    }
+
+    $(window).on("resize",function(){
+        resizeWindow();
+    });</script>
+    
+<script>var resizefunc = [];</script>
+</body>
+</html>

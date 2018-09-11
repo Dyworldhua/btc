@@ -1,0 +1,257 @@
+{include file="login/header" /}
+     <style>
+         #registerFrom .box{
+             height:77px;
+             overflow: hidden;
+         }
+         .error{
+             color:red;
+             font-weight:normal;
+         }
+         #main-window{
+             margin-top:120px;
+         }
+     </style>
+  <div class="main-container">
+   <div class="main-content main-wrapper" id="main-window">
+    <div class="vertical-center-container">
+     <div class="container">
+      <div class="row">
+       <div class="col-md-3 col-sm-3 col-xs-3"></div>
+       <div class="col-md-6 col-sm-6 col-xs-6">
+        <div >
+         <br />
+         <div class="form-base">
+          <h4 class="text-center blue-title">注册</h4>
+          <!-- <p class="err-msg">错误信息</p> -->
+
+          <form class="form-horizontal" id="registerFrom" method="post">
+           <div class="form-group box" >
+            <div class="col-xs-12">
+             用户名
+            </div>
+            <div class="col-xs-12">
+             <input class="form-control" id="username" name="username"  placeholder="用户名" type="text" />
+            </div>
+
+           </div>
+           <div class="form-group box" >
+            <div class="col-xs-12">
+             密码
+            </div>
+            <div class="col-xs-12">
+             <input class="form-control" placeholder="密码" type="password" name="password" id="password" />
+            </div>
+
+           </div>
+
+           <div class="form-group box" >
+            <div class="col-xs-12">
+             确认密码
+            </div>
+            <div class="col-xs-12">
+             <input class="form-control" placeholder="确认密码" name="pwd" type="password" id="pwd" />
+            </div>
+
+           </div>
+
+           <div class="form-group box" >
+            <div class="col-xs-12">
+             手机号
+            </div>
+            <div class="col-md-8 col-sm-7 col-xs-6">
+             <input class="form-control" placeholder="手机号" value="" id="phone" name="phone" type="text" />
+            </div>
+            <div class="col-md-4 col-sm-5 col-xs-6">
+             <a class="btn btn-warning btn-block" onclick="getNoteCode(this)">获取短信验证码</a>
+            </div>
+
+           </div>
+
+           <div class="form-group box" >
+            <div class="col-xs-12">
+             短信验证码
+            </div>
+            <div class="col-xs-12">
+             <input class="form-control" placeholder="短信验证码" type="text" name="notecaptcha" id="notecaptcha" />
+            </div>
+
+           </div>
+
+           <div class="form-group box" >
+            <div class="col-xs-12">
+             验证码
+            </div>
+            <div class="col-md-8 col-sm-7 col-xs-6">
+             <input class="form-control" placeholder="验证码" id="captcha" name="captcha" type="text" />
+            </div>
+            <div class="col-md-4 col-sm-5 col-xs-6">
+              <img class="auth-img" src="{:captcha_src()}" onClick="changeCode()" alt="captcha" />
+            </div>
+
+           </div>
+           <div class="form-group ">
+            <div class="col-xs-12">
+             <label><input type="checkbox" checked name="agreement" id="agreement" />&nbsp;我已阅读并同意&nbsp;<a class="terms-service-link" href="" target="_blank">比特大陆服务条款</a></label>
+                <label class="error agreement"></label>
+            </div>
+           </div>
+           <br />
+           <div class="form-group ">
+            <div class="col-xs-12">
+             <button class="btn btn-submit btn-block" type="submit">创建账户</button>
+            </div>
+           </div>
+           <br />
+           <div class="form-group">
+            <div class="col-md-6 col-sm-6 col-xs-6 text-left">
+             <!--<a class="gray-link" href="">没有收到邮件?</a>-->
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+             <a class="exist-user-link" href="/login">登录</a>
+            </div>
+           </div>
+           <br />
+          </form>
+         </div>
+        </div>
+       
+       </div>
+       <div class="col-md-3 col-sm-3 col-xs-3"></div>
+      </div>
+     </div>
+    </div>
+   </div>
+
+      {include file="login/footer" /}
+  </div>
+  
+ 
+ </body>
+ <script>
+jQuery.validator.addMethod("isMobile", function(value, element) {
+     var length = value.length;
+     var mobile = /^(1[3|5|6|7|8]\d{9})$/;
+     return this.optional(element) || (length == 11 && mobile.test(value));
+}, "手机号格式不正确！");
+$("#registerFrom").validate({
+     rules:{
+         username:{
+             required:true,
+             maxlength:10,
+         },
+         password:{
+             required:true,
+             minlength:8,
+         },
+         pwd:{
+             required:true,
+             equalTo:"#password",
+             minlength:8,
+         },
+         phone:{
+             required:true,
+             isMobile:true,
+         },
+         notecaptcha:{
+             required:true
+         },
+         captcha:{
+             required:true
+         }
+
+     },
+     onkeyup:false,
+     success:"valid",
+     submitHandler:function(form){
+         if(!$('#agreement').is(':checked')){
+             $('.agreement').show();
+             $('.agreement').text('请先阅读条款！');
+             return false;
+         }
+         $.ajax({
+             url:"/register",
+             type:'post',
+             dataType:'json',
+             data:$('#registerFrom').serialize(),
+             success:function(data){
+                 console.log(data)
+                 if (data.code == 0){
+                     layer.msg(data.msg);
+                     return false;
+                 }
+                 if (data.code == 1){
+
+                     layer.msg(data.msg+' 正在前往登录页面...');
+                     setTimeout(function(){
+                         location.href=data.url;
+                     },1500);
+
+                     return false;
+
+
+                 }
+             }
+         })
+     }
+});
+function getNoteCode(obj) {
+    var phone = $('#phone').val();
+    var reg = /^1[3|5|6|7|8]\d{9}$/;
+    if (phone == '') {
+        layer.msg('请填写手机号！');
+        return false;
+    } else if (!reg.test(phone)) {
+        return false;
+    } else {
+      $.ajax({
+          url: "/getNoteCode",
+          type: 'POST',
+          data: {"phone": phone},
+          beforeSend:function(){
+              $(obj).html('<i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop">&#xe63d;</i>');
+          },
+          success: function (data) {
+              if (data.code == 1) {
+                  layer.msg(data.msg);
+                  sec_time(obj,120);
+                  return false;
+              } else if (data.code == 0) {
+                  layer.msg(data.msg);
+                  return false;
+              }else{
+                  layer.msg(data.msg,{time:1000});
+                  return false;
+              }
+
+          },
+          error:function(){
+              $(obj).html('获取短信验证码');
+              layer.msg('网络错误，请稍后重试',{time:3000});
+              return false;
+          }
+      })
+    }
+}
+function sec_time(obj,sec){
+    $(obj).removeAttr('onclick');
+    $(obj).removeClass('btn-warning');
+    $(obj).addClass('btn-default');
+
+    $(obj).html('<span class="sec">'+sec+'</span>s后获取验证码');
+    var stop = setInterval(function(){
+     sec --;
+     $('.sec').text(sec);
+         if(sec <= 0){
+            $(obj).attr('onclick','getNoteCode(this)');
+            $(obj).text('获取短信验证码');
+            clearTimeout(stop);
+        }
+    },1000);
+}
+function changeCode(){
+    var $src = $('.auth-img');
+    $src.attr('src','{:captcha_src()}'+'?'+Math.random())
+}
+ </script>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        添加购买时长
+    </title>
+    {include file="common/header" /}
+    <style>
+        .layui-form-onswitch:before{
+            content:'';
+        }
+    </style>
+</head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+
+                <label class="layui-form-label">购买时长</label>
+                <div class="layui-input-block">
+                    <input type="text" name="length" value="" lay-verify="required|length" autocomplete="off" placeholder="购买时长(月)" class="layui-input">
+                </div>
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="formsub">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+{include file="common/footer"/}
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+                ,layer = layui.layer
+                ,layedit = layui.layedit
+                ,$ = layui.jquery;
+
+        //自定义验证规则
+        form.verify({
+            length:[/^[0-9]{1,2}$/,'请填写数字类型,且购买时长最多为两位']
+        });
+        //监听提交
+        form.on('submit(formsub)', function(data){
+            $.ajax({
+                url:"/admin/mill/mill_length_add",
+                type:"POST",
+                data:data.field,
+                success:function(msg){
+                    if(msg.code == 1){
+                        layer.msg(msg.msg)
+                    }
+                },
+                error:function(){
+                    layer.msg('网络错误，请重试...',{time:1200});
+                    return false;
+                }
+            })
+            return false;
+        });
+    });
+</script>
+
+</body>
+
+</html>

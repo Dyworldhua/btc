@@ -1,0 +1,292 @@
+{include file="center/header" /}
+<style>
+    .info{
+        display:inline-block;
+        width:100%;
+        height:600px;
+        margin: 0 50px 0 0;
+        overflow:hidden;
+    }
+    .info_box{
+        height:100%;
+    }
+    .info_box table{
+        margin:10px 0 0 0;
+    }
+    .info_box table tr td:nth-child(1){
+        text-align:right;
+        font-weight:bold;
+        width:200px;
+    }
+    .info_box table tr td:nth-child(2){
+        padding-left:0;
+    }
+    .info_box table td{
+        border:0;
+    }
+    .user_info{
+        text-align:center;
+    }
+    .input-width{
+        width:30%;
+    }
+    .input-label{
+        width:100px;
+        text-align:right;
+    }
+    .tab_title_bot{
+        margin-bottom:20px;
+    }
+    .div-table{
+        width:100%;
+        height:400px;
+    }
+    .quxian select{
+        border:1px solid #666;
+    }
+    .quxian select option{
+        
+        color:#666;
+    }
+    strong{
+        color:#666;
+        font-size:16px;
+        font-weight:normal;
+    }
+    .quxian li:first-child{
+        margin-left:0px;
+    }
+    .quxian li{
+        margin-top:15px;
+        margin-left:110px;
+    }
+    .quxian li input[type=text]{
+        padding-left:5px;
+        padding-top:2px;
+        padding-bottom:2px;
+    }
+</style>
+<div class="layui-main content_box">
+    <div class="box_left">
+        {include file="center/menu" /}
+    </div>
+    <div class="box_right">
+        <section>
+                <div class="layui-tab layui-tab-brief" lay-filter="test">
+                        <ul class="layui-tab-title tab_title_bot">
+                            <li class="layui-this">我的余额</li>
+                            <li>余额提现</li>
+                            <li lay-id="tixian">提现信息</li>
+                            <li>历史收益</li>
+                        </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <div class="info">
+                            <fieldset class="layui-elem-field info_box">
+                                <legend>钱包信息</legend>
+                                <div class="layui-field-box">
+                                    <table class="layui-table">
+                                        <tr>
+                                            <td>我的余额：</td>
+                                            <td><?=$wallet['balance']?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>我的比特币(BTC)：</td>
+                                            <td><?=$wallet['btc_balance']?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>我的莱特币(LTC)：</td>
+                                            <td><?=$wallet['ltc_balance']?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>我的比特币现金(BCH)：</td>
+                                            <td><?=$wallet['bch_balance']?></td>
+                                        </tr>
+                                    </table>
+                                    
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <form class="layui-form changePwdFrom" action="" method="post">
+                            <ul class="quxian">
+                                <li>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <strong>提现币种：</strong>
+                                            <select name="codeList" lay-filter="code">
+                                                <option selected>
+                                                    我的余额(CNY)
+                                                </option>
+                                                <option>
+                                                    我的比特币(BTC)
+                                                </option>
+                                                <option>
+                                                    我的莱特币(LTC)
+                                                </option>
+                                                <option>
+                                                    我的比特现金(BCH)
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong style="color:#666;">当前币种余额：<span style="font-weight:normal;color:#000;" class="now-balance"><?=$wallet['balance']?></span></strong>
+                                </li>
+                                <li>
+                                    <strong style="color:#666;">当前最小提币额为：<span style="font-weight:normal;color:#000;"></span></strong>
+                                </li>
+                                <li>
+                                    <strong>取现方式：</strong>
+                                </li>
+                                <li>
+                                    <strong style="color:#666;">提现金额：</strong><input type="text" name="money" lay-verify="required|money" placeholder="请输入提现金额" autocomplete="off" class="layui-input" style="width:200px;display:inline-block;">
+                                </li>
+                                <li>
+                                    <button class="layui-btn putforwardBtn" lay-submit="" lay-filter="putforwardBtn"><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i>立即提现</button>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="layui-tab-item">
+                        <p>您的提现正在申请中……</p>
+                    </div>
+                    <div class="layui-tab-item">
+                        <p style="margin-bottom:20px;">我的收益：</p>
+                        <div id="container" style="width:800px;height: 400px;margin:0 auto;"></div>
+                           
+                        
+                    </div>
+                </div>
+            </div>
+            <span></span>
+        </section>
+
+    </div>
+
+</div>
+<script>
+    layui.use(['form', 'layedit', 'laydate','element'], function(){
+        var form = layui.form
+                ,layer = layui.layer
+                ,$ = layui.jquery;
+        var element = layui.element;
+        
+        form.verify({
+            money:[/^[0-9]+([.]{1}[0-9]{1,2}){0,1}$/,'取现金额必须是数字类型！']
+        });
+    // 币种转换
+    form.on('select(code)',function(data){
+        var balance = data.value;
+        var data = {
+            'type':balance
+        }
+        $.ajax({
+            url:'/member/currency_replace',
+            data:data,
+            type:'post',
+            success:function(val){
+                if(val.code==1){
+                    layer.msg('正在查询余额……',{time:600},function(){
+                        $('.now-balance').html(val.msg);
+                        $('input[name=money]').val('');
+                    });
+                }
+            },
+            error:function(val){
+                if(val.code!==1){
+                    layer.msg('网络错误，请稍后尝试',{time:1200});
+                }
+            }
+        })
+    })
+    form.on('submit(putforwardBtn)', function(data){
+            var current_money = $('.now-balance').text() // 当前币种余额
+            var put_money = data.field.money  // 取现金额
+            if(parseInt(put_money) > parseInt(current_money) ){
+                layer.msg('取现额度大于当前余额！');
+                return false;
+            }
+            var data = {
+                'money':data.field.money,
+                'type':data.field.codeList
+            }
+            $.ajax({
+                url:"/member/putforward",
+                data:data,
+                type:'POST',
+                success:function(data){
+                    if(data.code==1){
+                        layer.msg(data.msg,{time:2400},function(){
+                            layer.msg('页面跳转中……',{time:300},function(){
+                                element.tabChange('test','tixian');
+                            });
+                        })
+                    }
+                },
+                error:function(){
+                    $('.changePwdBtn i').html('');
+                    layer.msg('网络错误，请稍后重试...',{time:1200});
+                    return false;
+                }
+            });
+            return false;
+        });
+    });
+</script>
+ <script type="text/javascript">
+    
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+    app.title = '坐标轴刻度与标签对齐';
+
+    option = {
+        color: ['#ccc'],
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                data : ['2018-06-01', '2018-06-02', '2018-06-03', '2018-06-04', '2018-06-05', '2018-06-06', '2018-06-07'],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'今日收益',
+                type:'bar',
+                barWidth: '60%',
+                data:[10, 30, 15, 33, 49, 23, 28]
+            }
+        ]
+    };
+    ;
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+   
+</script>
+<div style="clear:both;"></div>
+{include file="common/footer" /}
+
+

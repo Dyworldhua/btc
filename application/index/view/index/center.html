@@ -1,0 +1,167 @@
+{include file="center/header" /}
+<title>个人中心</title>
+<div class="layui-main content_box">
+
+    <div class="box_left">
+    {include file="center/menu" /}
+    </div>
+    <div class="box_right">
+        <section>
+
+            <table class="layui-table" lay-data="{cellMinWidth: 80, url:'/admin/member/member_list', page:{fixed:'right'}, id:'idTest',response:{statusCode: 1},limits:[2,10,20,30],limit:20,id: 'testReload'}" lay-filter="membetTable">
+                <thead>
+                <tr>
+                    <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                    <th lay-data="{field:'uid', width:80, sort: true, fixed: true,align:'center'}">ID</th>
+                    <th lay-data="{field:'username', align:'center'}">用户名</th>
+                    <th lay-data="{field:'phone', align:'center'}">手机号</th>
+                    <th lay-data="{field:'btc_balance', align:'center', sort:true}">比特币</th>
+                    <th lay-data="{field:'balance', align:'center', sort: true}">钱包余额</th>
+                    <th lay-data="{field:'addTime',sort:true, align:'center'}">注册时间</th>
+                    <th lay-data="{field:'lastLoginTime',sort:true, align:'center'}">最后登录时间</th>
+                    <th lay-data="{field:'status', align:'center',width:90, sort: false,templet:'#status'}">状态</th>
+                    <th lay-data="{fixed: 'right',width:150, align:'center', toolbar: '#barDemo'}"></th>
+                </tr>
+                </thead>
+            </table>
+        </section>
+
+    </div>
+
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="status">
+    {{#  if(d.status == 0){ }}
+    <a class="layui-btn layui-btn-xs layui-btn-danger">禁用</a>
+    {{#  } else { }}
+    <a class="layui-btn layui-btn-xs ">启用</a>
+    {{#  } }}
+</script>
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        var $ = layui.jquery;
+
+        //监听工具条
+        table.on('tool(membetTable)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('确定删除吗？', function(index){
+                    var uid = data.uid;
+                    $.ajax({
+                        type:"GET",
+                        url:"/admin/member/member_del/"+data.uid,
+                        success:function(msg){
+                            layer.close(index);
+                            if(msg.code == 0){
+                                layer.msg(msg.msg,{time:1200});
+                                return false;
+                            }else if(msg.code == 1){
+                                obj.del();
+                                layer.msg(msg.msg,{time:1000});
+                                return false;
+                            }
+                        },error:function(){
+                            layer.msg('网络错误，请重试...',{time:1200});
+                            return false;
+                        }
+                    })
+
+                });
+            } else if(obj.event === 'edit'){
+                layer.open({
+                    title:'编辑用户',
+                    type: 2,
+                    area: ['700px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/admin/member/member_edit/'+ data.uid
+                });
+            }
+        });
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                        ,data = checkStatus.data;
+                if(data.length <= 0){
+                    layer.msg('请选择要删除的数据！');
+
+                    return false;
+                }
+                var uids = new Array;
+                $.each(data,function(i,v){
+                    uids.push(v.uid);
+                });
+                layer.confirm('确定删除选中的数据？',function(index){
+                    $.ajax({
+                        type:"POST",
+                        url:'/admin/member/member_dels',
+                        data:{'uids':JSON.stringify(uids)},
+                        success:function(data){
+                            layer.close(index);
+                            if(data.code == 0){
+                                layer.msg(data.msg,{time:1200});
+                                return false;
+                            }else if(data.code == 1){
+                                layer.msg(data.msg,{time:1200},function(){
+                                    location.reload();
+                                });
+
+                                return false;
+                            }
+                        },error:function(){
+                            layer.msg('网络错误，请重试...',{time:1200});
+                            return false;
+                        }
+                    })
+                })
+            },member_add:function(){
+                layer.open({
+                    title:'添加用户',
+                    type: 2,
+                    area: ['700px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/admin/member/member_add'
+                });
+            },
+//            reload: function(){
+//                alert(1111);
+//                var demoReload = $('#demoReload');
+//
+//                //执行重载
+//                table.reload('testReload', {
+//                    page: {
+//                        curr: 1 //重新从第 1 页开始
+//                    }
+//                    ,where: {
+//                        key: {
+//                            id: demoReload.val()
+//                        }
+//                    }
+//                });
+//            }
+
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+<div style="clear:both;"></div>
+{include file="common/footer" /}

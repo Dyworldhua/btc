@@ -1,0 +1,143 @@
+<footer>
+    <div class="wild" style="padding-top:30px;padding-bottom:30px;">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div style="background: url(https://dn-hashnest.qbox.me/assets/view3/home/world-white-a4e3532732dc0852eb0b68881057642e03edf9fc52112e1d94dd52d93ad989aa.png) no-repeat;background-size: 100% 100%;text-align:center;color:#efefef;">
+                            <br />
+                            <br />
+                            <img src="__INDEX__/img/bitmainlogo-ab6f3cc3a46a6ffdb2ca72a5b31f843086eea1abc5e5eaf6dcece33084003c7c.svg" style="max-height: 22px;max-width: 100%;" />
+                            <br />
+                            <br />
+                            <b>Copyright &copy; 2017</b>
+                            <br />
+                            <br />
+                            <br />
+                        </div>
+                    </div>
+                    <div class="col-sm-2"></div>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="div-table">
+                    <div class="div-tr">
+                        <div class="div-td">
+                            <h4>产品</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="https://www.bitmaintech.com?utm_source=hashnest" target="_blank"> AntMiner</a></li>
+                                <li><a href="https://www.hashnest.com?ticket=ST&amp;utm_source=hashnest" target="_blank"> HASHNEST</a></li>
+                                <li><a href="https://www.antpool.com?utm_source=hashnest" target="_blank">AntPool</a></li>
+                            </ul>
+                        </div>
+                        <div class="div-td">
+                            <h4>关于</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="https://www.bitmaintech.com/about.htm" target="_blank">关于我们</a></li>
+                                <li><a href="https://account.bitmain.com/terms_service" target="_blank">使用条款</a></li>
+                            </ul>
+                        </div>
+                        <div class="div-td">
+                            <h4>服务</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="https://support.bitmain.com?ticket=ST&amp;utm_source=hashnest" target="_blank">支持中心</a></li>
+                            </ul>
+                        </div>
+                        <div class="div-td">
+                            <h4>交流</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="https://forum.bitmain.com?ticket=ST&amp;utm_source=hashnest" target="_blank">比特大陆社区</a></li>
+                                <li><a href="https://twitter.com/Hashnest_com" target="_blank">Twitter</a></li>
+                                <li><a href="https://www.facebook.com/hashnest" target="_blank"> Facebook</a></li>
+                            </ul>
+                        </div>
+                        <div class="div-td" style="width: 230px;">
+                            <h4>市场</h4>
+                            <ul class="list-unstyled">
+                                <li><b>CoinDesk:<span id="coin_desk_symbol"></span><span id="coin_desk">--</span>/BTC</b></li>
+                                <li><b>Bitfinex: <span id="bitfinex_symbol"></span><span id="bitfinex">--</span>/BTC</b></li>
+                                <li><b>Coinbase: <span id="coinbase_symbol"></span><span id="coinbase">--</span>/LTC</b></li>
+                                <li><b>HashNest: <span id="hnbcc_symbol"></span><span id="hnbcc">--</span>/BCC</b></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<a class="tothetop" href="javascript:;"><i class="layui-icon">&#xe619;</i></a>
+<div class="flash-bar" id="message-flash"></div>
+<script src="__INDEX__/js/jquery.min.js"></script>
+<!--<script src="__INDEX__/js/bootstrap.min.js"></script>-->
+<script src="__INDEX__/js/i18n.js"></script>
+<script src="__INDEX__/js/view3-541f9b6c3e80c17fde306190bdb748a02d20f1bfa5c3ae79f6ffae2f27374858.js"></script>
+<script src="__INDEX__/js/validate.js"></script>
+<script src="__INDEX__/js/messages_zh.js"></script>
+<script src="__INDEX__/layer/layer.js"></script>
+
+
+<script>
+    //时间戳的处理
+    function toDateString (d, format){
+        if(d == 0){
+            return '';
+        }
+        var date = new Date(d*1000)
+                ,ymd = [
+            digit(date.getFullYear(), 4)
+            ,digit(date.getMonth() + 1)
+            ,digit(date.getDate())
+        ]
+                ,hms = [
+            digit(date.getHours())
+            ,digit(date.getMinutes())
+            ,digit(date.getSeconds())
+        ];
+
+        format = format || 'yyyy-MM-dd HH:mm:ss';
+
+        return format.replace(/yyyy/g, ymd[0])
+                .replace(/MM/g, ymd[1])
+                .replace(/dd/g, ymd[2])
+                .replace(/HH/g, hms[0])
+                .replace(/mm/g, hms[1])
+                .replace(/ss/g, hms[2]);
+    };
+
+    //数字前置补零
+    function digit(num, length, end){
+        var str = '';
+        num = String(num);
+        length = length || 2;
+        for(var i = num.length; i < length; i++){
+            str += '0';
+        }
+        return num < Math.pow(10, length) ? str + (num|0) : num;
+    };
+</script>
+<script>function resizeWindow(){
+    var window_height = $(window).height();
+    var top = $("header").height();
+    var bottom = $("footer").height();
+
+    var temp = window_height - top - bottom;
+    $(".main-container").css("height",temp);
+
+    var main_window_height = $(".main-container").height();
+
+    if(main_window_height){
+        $('.auto-height-right').css("min-height", main_window_height - 130);
+    }else{
+        $('.auto-height-right').css("min-height", temp);
+    }
+}
+
+$(window).on("resize",function(){
+    resizeWindow();
+});</script>
+<script>var resizefunc = [];</script>
+
+</div>
+</body>
+</html>

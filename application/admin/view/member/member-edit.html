@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <meta charset="utf-8">
+    <title>
+        编辑用户
+    </title>
+{include file="common/header" /}
+    <style>
+        .layui-form-onswitch:before{
+            content:'';
+        }
+    </style>
+</head>
+
+<body>
+    <div class="x-body">
+        <form class="layui-form" action="" method="post">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" value="<?=$member['username']?>" lay-verify="required|username" autocomplete="off" placeholder="用户名" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">比特币余额</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="btc_balance" lay-verify="btc_balance" autocomplete="off" placeholder="比特币余额" class="layui-input" value="<?=$member['btc_balance']?>">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="password" lay-verify="password" value="" placeholder="密码" autocomplete="off"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">钱包余额</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="balance" lay-verify="balance" autocomplete="off" class="layui-input"placeholder="钱包余额" value="<?=$member['balance']?>">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机号</label>
+                    <div class="layui-input-block">
+                        <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input" value="<?=$member['phone']?>">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" <?php $status = $member['status']; if($status == 1){?> checked <?php  }?> name="status" lay-skin="switch" lay-filter="switchTest" lay-text="启用|禁用"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>禁用</em><i></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="formsub">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{include file="common/footer"/}
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+                ,layer = layui.layer
+                ,layedit = layui.layedit
+                ,$ = layui.jquery;
+
+        //自定义验证规则
+        form.verify({
+            username: function(value){
+                if(value.length > 10){
+                    return '用户名最多10位！';
+                }
+            }
+            ,password: function(value){
+                if(value != ''){
+                    if( value.length < 8){
+                        return '密码长度至少8位！';
+                    }
+                }
+
+            },
+            btc_balance:function(value){
+                if(value != ''){
+                    if(isNaN(value)){
+                        return '比特币金额类型只能是数字！';
+                    }
+                }
+            },
+            balance:function(value){
+                if(value != ''){
+                    if(isNaN(value)){
+                        return '钱包金额类型只能是数字！';
+                    }
+                }
+            }
+
+        });
+        //监听提交
+        form.on('submit(formsub)', function(data){
+            $.ajax({
+                url:"/admin/member/member_edit/<?=$member['uid']?>",
+                type:"POST",
+                data:data.field,
+                success:function(msg){
+                    if(msg.code == 0){
+                        layer.msg(msg.msg);
+                        return false;
+                    }else if(msg.code == 1){
+                        layer.msg(msg.msg);
+                        return false;
+                    }
+                },
+                error:function(){
+                    layer.msg('网络错误，请重试...',{time:1200});
+                    return false;
+                }
+            })
+            return false;
+        });
+
+
+    });
+</script>
+
+</body>
+
+</html>

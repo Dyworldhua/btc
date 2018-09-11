@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link rel="shortcut icon" type="image/x-icon" href="__INDEX__/img/favicon-4c69214d0d09c0f3e093fc18b8c84e0f1356f94fb3143185af5a95880af6cadc.ico" />
+    <script>window.I18n = "zh-CN";</script>
+
+    <link rel="stylesheet" media="all" href="__INDEX__/css/view3-ed861d367d138ecb72b5c6a7c67ced5d0d3880e51f50950cdffc700705362110.css" />
+    <link rel="stylesheet" type="text/css" href="__INDEX__/css/normalize.css" />
+    <link rel="stylesheet" href="__INDEX__/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="__INDEX__/css/demo.css">
+    <script src="__INDEX__/js/jquery.min.js"></script>
+    <script src="__INDEX__/js/view3-541f9b6c3e80c17fde306190bdb748a02d20f1bfa5c3ae79f6ffae2f27374858.js"></script>
+    <link rel="stylesheet" href="__INDEX__/layui2.2.5/css/layui.css">
+    <script src="__INDEX__/layui2.2.5/layui.js"></script>
+    <style>
+        .home_header_nav.scrolled{
+            background:white !important;
+        }
+        #wrapper{
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="zh-CN">
+<div id="wrapper">
+    <nav class="navbar navbar-default home_header no-radius header_nav" style="background: black;">
+        <div class="wild">
+            <div class="navbar-header">
+                <a href="/"><img src="__INDEX__/img/hashnestlogo-white-d1fbef06840e9e9f457a32563d81a3d5721a1eb88742ff4b93fc36619f0fe24a.svg" style="width:200px;margin-top: 6px;" /></a>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- <div class="search d1">
+                        <form>
+                            <input type="text" class="search" name="search" placeholder="搜索从这里开始...">
+                            <button type="submit" onclick="pro_search()"></button>
+                        </form>
+                      </div> -->
+                    <?php if(session('?indexUser')){ ?>
+                        <li style="line-height: 2.8em;">
+                            <a href="/myCarts"><i class="layui-icon" style="color:#fff;font-size:20px;">&#xe657;</i></a>
+                        </li>
+                        <li class="main" style="height:40px;">
+                            <a aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+
+                                <label class="pull-left"><?=session('indexUser');?></label>
+                                <div class="user-avatar-layout pull-left" style="margin-left:10px;margin-right:5px;">
+                                    <img src="__INDEX__/img/avatar.png" />
+                                </div><span class="caret" style="margin-right:5px;"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/member/member_info"><i class="layui-icon" style="color:#fff;">&#xe612;</i> 用户中心</a></li>
+                                <li><a data-method="delete" href="/logout"><i class="layui-icon" style="color:#fff;">&#xe60b;</i> 退出登录</a></li>
+                            </ul>
+                    <?php }else {?>
+                        <li class="main" style="height:40px;">
+                            <a aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+                                <div class="user-avatar-layout pull-left" style="margin-left:10px;margin-right:5px;">
+                                    <img src="__INDEX__/img/avatar.png" />
+                                </div><span class="caret" style="margin-right:5px;"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/login">登录</a></li>
+                                <li><a href="/register">注册</a></li>
+
+                            </ul>
+
+                    <?php } ?>
+                    </li>
+                    <li>
+                        <a class="dropdown-toggle pull-right" data-toggle="dropdown" href="javascript:;">
+                            <div class="language">
+                                CN
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu pull-right dropdown-menu-header">
+                            <li><a href="">中文</a></li>
+                            <li><a href="">English</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="home_header_nav" id="home_header_nav" style="background: black;">
+        <div class="wild">
+            <div class="navbar-header hide" data-status="hide" id="home-header-logo">
+                <a href="/"><img src="__INDEX__/img/hashnestlogo-black-e2df6f40dcaa9906ccaa64863515bd0ddf2482df19b9667aea2462b3ee6e5264.svg" style="width:200px;margin-top: 5px;" /></a>
+            </div>
+            <ul class="nav navbar-right">
+                <li class="pull-left"><a href="/mill_list">矿机</a></li>
+                <li class="pull-left"><a href="">算力</a></li>
+                <li class="pull-left"><a href="">合约</a></li>
+                <li class="pull-left"><a href="">钱包</a></li>
+                <li class="pull-left"><a href="">设置</a></li>
+                <li class="pull-left"><a href="">流水</a></li>
+                <li class="pull-left"><a href="">矿池</a></li>
+                <li class="pull-left"><a href="">论坛</a></li>
+                <li class="pull-left"><a href="">App</a></li>
+            </ul>
+        </div>
+    </div>
+    

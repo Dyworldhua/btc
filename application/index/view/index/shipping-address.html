@@ -1,0 +1,252 @@
+{include file="center/header" /}
+<style>
+    .info{
+        position: relative;
+        display: inline-block;
+        width: 30%;
+        height: 165px;
+        margin: 20px 22px 0 0;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .info_box{
+        height:100%;
+        border-radius:5px;
+    }
+    .info_box table tr td:nth-child(1){
+        text-align:right;
+        width:80px;
+        vertical-align: top;
+    }
+
+    .info_box table td{
+        border:0;
+        padding: 2px 0 0 0;
+    }
+    .card_box{
+        padding:0 5px 0 0;
+    }
+    .user_info{
+        text-align:center;
+    }
+    .address_list{
+        padding-left:20px;
+    }
+    .add_address{
+        margin:20px 0 0 0;
+    }
+    .group_btns{
+        position: absolute;
+        bottom: 0;
+        padding: 5px 5px 5px 0;
+        text-align: right;
+        width: 100%;
+        display: none;
+        background: rgba(0, 0, 0, 0.05);
+    }
+</style>
+<div class="layui-main content_box">
+    <div class="box_left">
+        {include file="center/menu" /}
+    </div>
+    <div class="box_right">
+        <section>
+            <div class="address_list">
+                <?php if($address){ foreach($address as $info){ ?>
+                    <div class="info">
+                        <fieldset class="layui-elem-field info_box">
+                            <legend><?=$info['linkName']?></legend>
+                            <div class="layui-field-box card_box">
+                                <table class="layui-table">
+                                    <tr>
+                                        <td>手机号：</td>
+                                        <td><?=$info['linkPhone']?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>邮政编码：</td>
+                                        <td><?=$info['postcode']?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>详细地址：</td>
+                                        <td><?=implode('，',json_decode($info['address']))?></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <div class="group_btns">
+                            <a onclick="editAddress(<?=$info['id']*989?>)" class="layui-btn layui-btn-xs layui-btn-warm">编辑</a>
+                            <a onclick="delAddress(this,<?=$info['id']*989?>)" class="layui-btn layui-btn-xs layui-btn-danger">删除</a>
+                        </div>
+                    </div>
+                <?php }} ?>
+
+                <div class="add_address">
+                    <a class="layui-btn" onclick="addAddress()"><i class="layui-icon">&#xe654;</i>添加地址</a>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+<script>
+    //添加配送地址
+    function addAddress(){
+        layer.open({
+            title:'添加配送地址',
+            type: 2,
+            area: ['500px', '600px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: '/member/addAddress'
+        });
+    }
+    //编辑配送地址
+    function editAddress(id){
+        layer.open({
+            title:'编辑配送地址',
+            type: 2,
+            area: ['500px', '600px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: '/member/editAddress/'+id
+        });
+    }
+    //删除配送地址
+    function delAddress(obj,id){
+        layer.confirm('确认删除吗？',function(){
+            $.ajax({
+                type:'post',
+                url:'/member/delAddress',
+                data:{'id':id},
+                success:function(data){
+                    if(data.code == 1){
+                        $(obj).parent().parent('.info').remove();
+                        layer.msg(data.msg);
+                        return false;
+                    }else if(data.code == 0){
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                }
+            })
+        });
+    }
+    layui.use('table', function(){
+        var table = layui.table;
+        var $ = layui.jquery;
+
+        $('.info').mouseenter(function(){
+            var i = $(this).index();
+            $(this).children('.group_btns').css('display','block');
+        });
+        $('.info').mouseleave(function(){
+            $(this).children('.group_btns').css('display','none');
+        });
+        //监听工具条
+        table.on('tool(membetTable)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('确定删除吗？', function(index){
+                    var uid = data.uid;
+                    $.ajax({
+                        type:"GET",
+                        url:"/admin/member/member_del/"+data.uid,
+                        success:function(msg){
+                            layer.close(index);
+                            if(msg.code == 0){
+                                layer.msg(msg.msg,{time:1200});
+                                return false;
+                            }else if(msg.code == 1){
+                                obj.del();
+                                layer.msg(msg.msg,{time:1000});
+                                return false;
+                            }
+                        },error:function(){
+                            layer.msg('网络错误，请重试...',{time:1200});
+                            return false;
+                        }
+                    })
+
+                });
+            } else if(obj.event === 'edit'){
+                layer.open({
+                    title:'编辑用户',
+                    type: 2,
+                    area: ['700px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/admin/member/member_edit/'+ data.uid
+                });
+            }
+        });
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                        ,data = checkStatus.data;
+                if(data.length <= 0){
+                    layer.msg('请选择要删除的数据！');
+
+                    return false;
+                }
+                var uids = new Array;
+                $.each(data,function(i,v){
+                    uids.push(v.uid);
+                });
+                layer.confirm('确定删除选中的数据？',function(index){
+                    $.ajax({
+                        type:"POST",
+                        url:'/admin/member/member_dels',
+                        data:{'uids':JSON.stringify(uids)},
+                        success:function(data){
+                            layer.close(index);
+                            if(data.code == 0){
+                                layer.msg(data.msg,{time:1200});
+                                return false;
+                            }else if(data.code == 1){
+                                layer.msg(data.msg,{time:1200},function(){
+                                    location.reload();
+                                });
+
+                                return false;
+                            }
+                        },error:function(){
+                            layer.msg('网络错误，请重试...',{time:1200});
+                            return false;
+                        }
+                    })
+                })
+            },member_add:function(){
+                layer.open({
+                    title:'添加用户',
+                    type: 2,
+                    area: ['700px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/admin/member/member_add'
+                });
+            }
+
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+<div style="clear:both;"></div>
+{include file="common/footer" /}
+
+

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        购买时长
+    </title>
+    <style>
+        .layui-laypage{
+            float:right;
+        }
+    </style>
+{include file="common/header"/}
+</head>
+<body>
+    <div class="x-nav">
+        <span class="layui-breadcrumb" style="visibility: visible;">
+          <a>首页</a><span lay-separator="">/</span>
+          <a>会员管理</a><span lay-separator="">/</span>
+          <a><cite>购买时长</cite></a>
+        </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:37px">ဂ</i></a>
+    </div>
+    <div class="x-body demoTable">
+        <form class="layui-form x-center" action="" style="width:800px">
+            <div class="layui-form-pane" style="margin-top: 15px;">
+              <div class="layui-form-item">
+              </div>
+            </div>
+        </form>
+        <xblock class="demoTable">
+            <button class="layui-btn layui-btn-danger" data-type="getCheckData">批量删除</button>
+            <button class="layui-btn" data-type="mill_length_add">
+                <i class="layui-icon">&#xe608;</i>添加
+            </button>
+        </xblock>
+
+
+        <table class="layui-table" lay-data="{cellMinWidth: 80, url:'/admin/mill/mill_length', page:{fixed:'right'}, response:{statusCode: 1},limits:[2,10,20,30],limit:20, id:'idTest'}" lay-filter="membetTable">
+            <thead>
+            <tr>
+                <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true,align:'center'}">ID</th>
+                <th lay-data="{field:'mouth', align:'center',templet:'#lengthTime'}">购买时长(月)</th>
+                <th lay-data="{fixed: 'right',width:150, align:'center', toolbar: '#barDemo'}"></th>
+            </tr>
+            </thead>
+        </table>
+
+
+    </div>
+{include file="common/footer" /}
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="lengthTime">
+    {{d.mouth}}个月
+</script>
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        var $ = layui.jquery;
+
+        //监听工具条
+        table.on('tool(membetTable)', function(obj){
+            var data = obj.data;
+            // console.log(obj); 
+            if(obj.event === 'del'){
+                layer.confirm('确定删除吗？', function(index){
+                    var uid = data.id;
+                    $.ajax({
+                        type:"GET",
+                        url:"/admin/mill/mill_length_del/"+data.id,
+                        success:function(msg){
+                            layer.close(index);
+                            if(msg.code == 0){
+                                layer.msg(msg.msg,{time:1200});
+                                return false;
+                            }else if(msg.code == 1){
+                                obj.del();
+                                layer.msg(msg.msg,{time:1000});
+                                return false;
+                            }
+                        },error:function(){
+                            layer.msg('网络错误，请重试...',{time:1200});
+                            return false;
+                        }
+                    })
+
+                });
+            } else if(obj.event === 'edit'){
+                layer.open({
+                    title:'编辑购买时长',
+                    type: 2,
+                    area: ['700px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/admin/mill/mill_length_edit/'+ data.id
+                });
+            }
+        });
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                        ,data = checkStatus.data;
+                if(data.length <= 0){
+                    layer.msg('请选择要删除的数据！');
+
+                    return false;
+                }
+                var uids = new Array;
+                $.each(data,function(i,v){
+                    uids.push(v.id);
+                });
+                layer.confirm('确定删除选中的数据？',function(index){
+                    $.ajax({
+                        type:"POST",
+                        url:'/admin/mill/mill_length_dels',
+                        data:{'uids':JSON.stringify(uids)},
+                        success:function(data){
+                            layer.close(index);
+                            if(data.code == 0){
+                                layer.msg(data.msg,{time:1200});
+                                return false;
+                            }else if(data.code == 1){
+                                layer.msg(data.msg,{time:1200},function(){
+                                    location.reload();
+                                });
+
+                                return false;
+                            }
+                        },error:function(){
+                            layer.msg('网络错误，请重试...',{time:1200});
+                            return false;
+                        }
+                    })
+                })
+            },
+            mill_length_add:function(){
+                layer.open({
+                    title:'添加购买时长',
+                    type: 2,
+                    area: ['700px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/admin/mill/mill_length_add'
+                });
+            },
+
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+    </body>
+</html>
